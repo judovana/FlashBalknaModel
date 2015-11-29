@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exercises>
+    <exercises-set>
+        <exercise>
+            <id>internalWarmUp</id>
+            <names>
+                <name>Warm up</name>
+                <name locale="cs">Nástup</name>
+            </names>
+            <descriptions>
+                <description>Warm up to board!</description>
+                <description locale="cs">Zalez pod desku!</description>            
+            </descriptions>
+            <defaults>
+                <time>5</time> <!--seconds -->
+                <pause>5</pause> <!--seconds -->
+                <iterations>1</iterations>
+                <rest>5</rest> <!-- rest (default) after whole exercise-->
+            </defaults>
+        </exercise>
+    </exercises-set>
+    <exercises-set>
+        <set-defaults>
+            <time>10</time> <!--seconds -->
+            <pause>15</pause> <!--seconds -->
+            <iterations>10</iterations>
+            <rest>60</rest> <!-- rest (default) after whole exercise-->
+        </set-defaults>
+        <exercise>
+            <id>a01</id>
+            <names>
+                <name>open hang on big ones on top</name>
+                <name locale="cs">otevřený úchop, velký madla za balknou</name>
+            </names>
+            <!--        <descriptions>
+                <description>not yet</description>
+                <description locale="cs">nedodáno</description>            
+            </descriptions>-->
+            <images>
+                <image>%{id}.jpg</image> <!-- %{id} mark is replaced by id-->
+            </images>
+            <defaults>
+                <time>10</time> <!--seconds -->
+                <pause>15</pause> <!--seconds -->
+                <iterations>10</iterations>
+                <rest>60</rest> <!-- rest (default) after whole exercise-->
+            </defaults>
+        </exercise>
+    
+        <exercise>
+            <id>a02</id>
+            <names>
+                <name>open hang, big holes in the middle, 4 fingers</name>
+                <name locale="cs">otevřený úchop, velký díry uprostřed, 4 prsty </name>
+            </names>
+            <!--        <descriptions>
+                <description>not yet</description>
+                <description locale="cs">nedodáno</description>            
+            </descriptions>-->
+            <images>
+                <image>%{id}.jpg</image> <!-- %{id} mark is replaced by id-->
+            </images>
+            <!--            <defaults>
+                of course they can be missed and substituted from set-defaults
+            </defaults>-->
+        </exercise>
+
+        <exercise>
+            <id>a03</id>
+            <names>
+                <name>open hang, close holes in the middle, 3 fingers</name>
+                <name locale="cs">otevřený úchop, velký díry uprostřed blízko u sebe, 3 prsty</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+
+        <exercise>
+            <id>a04</id>
+            <names>
+                <name>open hang, close holes in the middle, 3 fingers left, 4 fingers right</name>
+                <name locale="cs">otevřený úchop, velký díry uprostřed blízko u sebe, 3 prsty levá, 4 pravá</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+
+        <exercise>
+            <id>a05</id>
+            <names>
+                <name>open hang, close holes in the middle, 4 fingers left, 2 fingers right</name>
+                <name locale="cs">otevřený úchop, velký díry uprostřed blízko u sebe, 4 prsty levá, 2 pravá</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+    
+        <exercise>
+            <id>a06</id>
+            <names>
+                <name>open hang, close holes in the middle, 3 fingers</name>
+                <name locale="cs">otevřený úchop, velký díry uprostřed, 3 prsty</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+
+        <exercise>
+            <id>a07</id>
+            <names>
+                <name>open hang, big holes in the middle, 2 fingers left, 4 fingers right</name>
+                <name locale="cs">otevřený úchop, velký díry uprostřed, 2 prsty levá, 4 pravá</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+    
+        <exercise>
+            <id>a08</id>
+            <names>
+                <name>open hang, big holes in the middle, 4 fingers left, 2 fingers right</name>
+                <name locale="cs">otevřený úchop, velký díry uprostřed, 4 prsty levá, 2 pravá</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+    
+        <exercise>
+            <id>a09</id>
+            <names>
+                <name>open hang, close holes in the middle, 2 fingers left, 2 fingers right</name>
+                <name locale="cs">otevřený úchop, velký díry uprostřed blízko u sebe, 2 prsty levá, 2 pravá</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+    
+        <exercise>
+            <id>a10</id>
+            <names>
+                <name>open hang, middle holes on top, 3 fingers left, 3 fingers right</name>
+                <name locale="cs">otevřený úchop, díry uprostřed úplně nahoře, 3 prsty levá, 3 pravá</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+    </exercises-set>   
+    <exercises-set> 
+        <set-defaults>
+            <time>10</time> <!--seconds -->
+            <pause>10</pause> <!--seconds -->
+            <iterations>10</iterations>
+            <rest>60</rest> <!-- rest (default) after whole exercise-->
+        </set-defaults>
+        <exercise>
+            <id>b03</id>
+            <names>
+                <name>open hang, bottom holes, corners, 4 fingers</name>
+                <name locale="cs">otevřený úchop, díry úplně dole v rožkách, 4 prsty</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>b04</id>
+            <names>
+                <name>open hang, bottom holes, closest in the middle, 3 fingers</name>
+                <name locale="cs">otevřený úchop, díry úplně dole uprostřed, 3 prsty</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>b05</id>
+            <names>
+                <name>open hang, bottom holes, left 2 fingers, right 4 fingers</name>
+                <name locale="cs">otevřený úchop, díry úplně dole, levá 2 prsty, pravá 4 prsty</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>b06</id>
+            <names>
+                <name>open hang, bottom holes, left 4 fingers, right 2 fingers</name>
+                <name locale="cs">otevřený úchop, díry úplně dole, levá 4 prsty, pravá 2 prsty</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>b07</id>
+            <names>
+                <name>open hang, bottom holes, 2 fingers</name>
+                <name locale="cs">otevřený úchop, díry úplně dole, 2 prsty</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>b08</id>
+            <names>
+                <name>open hang, bottom holes, 2 fingers</name>
+                <name locale="cs">otevřený úchop, díry úplně dole, 2 prsty</name>
+            </names>
+            <descriptions>
+                <description>pointing finger + middle finger</description>
+                <description locale="cs">ukazováček a prostředníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        
+        <exercise>
+            <id>b09</id>
+            <names>
+                <name>open hang, FOUR middle bottom holes, 2+1 fingers</name>
+                <name locale="cs">otevřený úchop, ČTYŘI díry úplně dole uprostřed, 2+1 prsty</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger small(outer) hole, pointing finger bigger (inner) hole</description>
+                <description locale="cs">prostředníček a prsteníček do vnější dvojprdy, prostředníček do větší - vnitřní - díry</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        
+        <exercise>
+            <id>b10</id>
+            <names>
+                <name>open hang, left hand central big hold, right middle line four fingers</name>
+                <name locale="cs">otevřený úchop, levá centrální madlo, pravá čtyřprda uprostřed</name>
+            </names>
+            <descriptions>
+                <description>open hang, left hand central big hold on top, right  hand , right-most middle line hole, four fingers</description>
+                <description locale="cs">otevřený úchop, levá na centrální madlo, pravá na nejpravější čtyřprdu v prostřední lajně</description>         
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        
+        <exercise>
+            <id>b11</id>
+            <names>
+                <name>open hang, righ hand central big hold, left middle line four fingers</name>
+                <name locale="cs">otevřený úchop, pravá centrální madlo, levá čtyřprda uprostřed</name>
+            </names>
+            <descriptions>
+                <description>open hang, right hand central big hold on top, left hand , left-most middle line hole, four fingers</description>
+                <description locale="cs">otevřený úchop, pravá na centrální madlo, levá na nejlevější čtyřprdu v prostřední lajně</description>         
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+    </exercises-set>     
+    
+    <exercises-set> 
+        <set-defaults>
+            <time>15</time> <!--seconds -->
+            <pause>10</pause> <!--seconds -->
+            <iterations>10</iterations>
+            <rest>60</rest> <!-- rest (default) after whole exercise-->
+        </set-defaults>
+        <exercise>
+            <id>c01</id>
+            <names>
+                <name>open hang, slippy big ones on middle of top</name>
+                <name locale="cs">otevřený úchop, dve svažující se madla na vršku</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>c05</id>
+            <names>
+                <name>open hang, shallow holes in top corners, 4 fingers</name>
+                <name locale="cs">otevřený úchop, mělké díry nahoře v rozích, 4 prsty</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>c06</id>
+            <names>
+                <name>open hang, left, two fingers bottom line, right, slippy big one on top</name>
+                <name locale="cs">otevřený úchop, levá dvouprda dole, pravá svažující se madlo na vršku</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>c07</id>
+            <names>
+                <name>open hang, left, slippy big one on top, right two fingers bottom line</name>
+                <name locale="cs">otevřený úchop, levá svažující se madlo na vršku, pravá dvouprda dole</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>c09</id>
+            <names>
+                <name>open hang, left, two fingers bottom line, right, shallow hole on top, 4 fingers</name>
+                <name locale="cs">otevřený úchop, levá dvouprda dole, pravá mělká čtyřprda na vršku</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+        <exercise>
+            <id>c10</id>
+            <names>
+                <name>open hang, left, shallow hole on top, four fingera, right two fingers bottom line</name>
+                <name locale="cs">otevřený úchop, levá mělká čtyřprda na vršku, pravá dvouprda dole</name>
+            </names>
+            <descriptions>
+                <description>middle finger + ring finger</description>
+                <description locale="cs">prostředníček a prsteníček</description>            
+            </descriptions>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+                <exercise>
+            <id>c11</id>
+            <names>
+                <name>Twou rounds on top. press togetehr</name>
+                <name locale="cs">dvě obliny na vršku na tlak ks obě</name>
+            </names>
+            <images>
+                <image>%{id}.jpg</image>
+            </images>
+        </exercise>
+    </exercises-set>
+</exercises>

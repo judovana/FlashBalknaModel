@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+čau první série fotek je nejlehčí a je v režimu,10 úchopů a každý uchop je 10 opakování 10 vteřin vis a 15 vteřin pauza, mezi zmíněnou cviků minuta pauza.druhá série fotek je středně těžká a je to 10 úchopů a každý uchop má 10 opakování,10 vteřin vis 10 vteřin pauza mezi změnou cviků minuta pauza.třetí série je těžká a je to 10 druhů úchopů po patnácti opakovaných,15 vteřin vis a 10 vteřin pauza mezi zmíněnou úchopů minuta pauza. 
+-->
+<trainings>
+    <training>
+        <id>fbb1</id>
+        <names>
+            <name>FBB training level easy</name>
+            <name locale="cs">FBB lehký trénink</name>
+        </names>
+        <!--        <descriptions>
+            <description>not yet</description>
+            <description locale="cs">nedodáno</description>            
+        </descriptions>-->
+        <!-- voulenteer image
+        <images>
+            <image>img5.jpg</image>
+            <image>img6.jpg</image>
+        </images>
+        -->
+        <exercises>
+            <exercise>
+                <id>a01</id>
+                <overrides>
+                    <!--any field from exercise can be overridenhere-->
+                    <!--<time>15</time>
+                    <pause>15</pause>
+                    <iterations>3</iterations>
+                    <rest>45</rest>-->
+                </overrides>
+            </exercise>    
+            <exercise>
+                <id>a02</id>
+            </exercise>
+            <exercise>
+                <id>a03</id>
+            </exercise>
+            <exercise>
+                <id>a04</id>
+            </exercise>
+            <exercise>
+                <id>a05</id>
+            </exercise>
+            <exercise>
+                <id>a06</id>
+            </exercise>
+            <exercise>
+                <id>a07</id>
+            </exercise>
+            <exercise>
+                <id>a08</id>
+            </exercise>
+            <exercise>
+                <id>a09</id>
+            </exercise>
+            <exercise>
+                <id>a10</id>
+            </exercise>
+        </exercises>
+    </training>
+    
+    <training>
+        <id>fbb2</id>
+        <names>
+            <name>FBB training advanced</name>
+            <name locale="cs">FBB trénink středně těžký</name>
+        </names>
+        <!--        <descriptions>
+            <description>not yet</description>
+            <description locale="cs">nedodáno</description>            
+        </descriptions>-->
+<!--        <images>
+            <image>%{id}.jpg</image>
+        </images>-->
+        <exercises>
+            <exercise>
+                <id>a01</id>
+                <overrides>
+                    <pause>10</pause>
+                </overrides>
+            </exercise>    
+            <exercise>
+                <id>a06</id>
+                <overrides>
+                    <pause>10</pause>
+                </overrides>
+            </exercise>
+            <exercise>
+                <id>b03</id>
+            </exercise>
+            <exercise>
+                <id>b04</id>
+            </exercise>
+            <exercise>
+                <id>b05</id>
+            </exercise>
+            <exercise>
+                <id>b06</id>
+            </exercise>
+            <exercise>
+                <id>b07</id>
+            </exercise>
+            <exercise>
+                <id>b08</id>
+            </exercise>
+            <exercise>
+                <id>b09</id>
+            </exercise>
+            <exercise>
+                <id>b10</id>
+            </exercise>
+            <exercise>
+                <id>b11</id>
+            </exercise>
+        </exercises>
+    </training>    
+    
+    
+    <training>
+        <id>fbb3</id>
+        <names>
+            <name>FBB training hard</name>
+            <name locale="cs">FBB trénink těžký</name>
+        </names>
+<!--        <images>
+            <image>%{id}.jpg</image>
+        </images>-->
+        <exercises>
+            <exercise>
+                <id>c01</id>
+            </exercise>    
+            <exercise>
+                <id>b03</id>
+                <overrides>
+                    <time>15</time>
+                </overrides>
+            </exercise>
+            <exercise>
+                <id>b07</id>
+                <overrides>
+                    <time>15</time>
+                </overrides>
+            </exercise>
+            <exercise>
+                <id>b08</id>
+                <overrides>
+                    <time>15</time>
+                </overrides>
+            </exercise>
+            <exercise>
+                <id>c05</id>
+            </exercise>
+            <exercise>
+                <id>c06</id>
+            </exercise>
+            <exercise>
+                <id>c07</id>
+            </exercise>
+            <exercise>
+                <id>b08</id>
+                <overrides>
+                    <time>15</time>
+                </overrides>
+            </exercise>
+            <exercise>
+                <id>c09</id>
+            </exercise>
+            <exercise>
+                <id>c10</id>
+            </exercise>
+            <exercise>
+                <id>c11</id>
+            </exercise>
+        </exercises>
+    </training>    
+    
+</trainings>
