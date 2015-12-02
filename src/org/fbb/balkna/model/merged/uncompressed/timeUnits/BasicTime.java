@@ -1,5 +1,7 @@
 package org.fbb.balkna.model.merged.uncompressed.timeUnits;
 
+import org.fbb.balkna.model.Model;
+import org.fbb.balkna.model.SoundProvider;
 import org.fbb.balkna.model.Translator;
 import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.utils.IoUtils;
@@ -14,7 +16,7 @@ public abstract class BasicTime {
     private final int originalValue;
     private int currentValue;
     private final MergedExercise originator;
-    
+
     public BasicTime(int originalValue, MergedExercise originator) {
         this.originalValue = originalValue;
         resetTime();
@@ -43,7 +45,7 @@ public abstract class BasicTime {
         sb.append(getInformaiveTitle())
                 .append("<br>")
                 .append(TimeUtils.secondsToMinutes(originalValue));
-                
+
         sb = IoUtils.htmlWrap(sb);
         return sb.toString();
     }
@@ -63,6 +65,33 @@ public abstract class BasicTime {
     public void currentMinusMinus() {
         currentValue--;
     }
+
+    public  void soundLogicRuntime() {
+        BasicTime c = this;
+        if (!Model.getModel().isLaud()) {
+            return;
+        }
+        if (c.getCurrentValue() - 2 == 0) {
+            SoundProvider.getInstance().getPSthree().playAsync();
+        } else if (c.getCurrentValue() - 1 == 0) {
+            SoundProvider.getInstance().getPStwo().playAsync();
+        } else if (c.getCurrentValue() == 0) {
+            SoundProvider.getInstance().getPSone().playAsync();
+        } else if (c.getCurrentValue() == c.getOriginalValue() / 2) {
+            if (c instanceof PausaTime) {
+                SoundProvider.getInstance().getPShalfPause().playAsync();
+            } else {
+                SoundProvider.getInstance().getPShalfRun().playAsync();
+            }
+        } else if (c.getCurrentValue() == (c.getOriginalValue()) / 4) {
+            if (c instanceof PausaTime) {
+                SoundProvider.getInstance().getPSthreeQatsPause().playAsync();
+            } else {
+                SoundProvider.getInstance().getPSthreeQuatsRun().playAsync();
+            }
+        }
+    }
     
-   
+    public abstract  void play();
+
 }

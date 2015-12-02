@@ -45,7 +45,7 @@ public class Settings {
     private String forcedLanguage = forcedLanguageDefault;
     private String forcedSoundFont = forcedSoundFontDefault;
 
-    private TimeShift timeShift = new TimeShift(timeShiftDefualt);
+    private final TimeShift timeShift = new TimeShift(timeShiftDefualt);
 
     /**
      * @return the laud
@@ -185,9 +185,11 @@ public class Settings {
         readItem(ss[0], ss[1]);
     }
 
-    private void readItem(String key, String value) {
+    public void readItem(String key, String value) {
         key = key.trim();
-        value = value.trim();
+        if (value!=null){
+            value = value.trim();
+        }
         //sory, jdk6 compatibility
         if (key.equals("laud")) {
             laud = Boolean.valueOf(value);
@@ -210,6 +212,26 @@ public class Settings {
         }
     }
 
+    public String[] listItems() {
+        return new String[]{
+            objectAsPropertyString("laud", laud),
+            " Default: " + objectAsPropertyString("laud", laudDefault),
+            objectAsPropertyString("allowSkipping", allowSkipping),
+            " Default: " + objectAsPropertyString("allowSkipping", allowSkippingDefault),
+            objectAsPropertyString("pauseOnChange", pauseOnChange),
+            " Default: " + objectAsPropertyString("pauseOnChange", pauseOnChangeDefault),
+            objectAsPropertyString("pauseOnExercise", pauseOnExercise),
+            " Default: " + objectAsPropertyString("pauseOnExercise", pauseOnExerciseDefault),
+            objectAsPropertyString("ratioForced", ratioForced),
+            " Default: " + objectAsPropertyString("ratioForced", ratioForcedDefault),
+            objectAsPropertyString("imagesOnTimerSpeed", imagesOnTimerSpeed),
+            " Default: " + objectAsPropertyString("imagesOnTimerSpeed", imagesOnTimerSpeedDefault),
+            objectAsPropertyString("forcedLanguage", forcedLanguage),
+            " Default: " + objectAsPropertyString("forcedLanguage", forcedLanguageDefault),
+            objectAsPropertyString("forcedSoundFont", forcedSoundFont),
+            " Default: " + objectAsPropertyString("forcedSoundFont", forcedSoundFontDefault)};
+    }
+
     void load(File dir) throws FileNotFoundException, IOException {
         if (dir.exists()) {
             File f = new File(dir, settingsname);
@@ -226,22 +248,30 @@ public class Settings {
         }
     }
 
+    private String objectAsPropertyString(String key, Object value)  {
+        if (value == null) {
+            return key + "=null";
+        }
+        return (key + "=" + value.toString());
+    }
+
     private void writeObjectAsProperty(String key, Object value, Object defult, BufferedWriter fw) throws IOException {
         if ((value == null && defult != null)) {
-            fw.write(key + "=null");
+            fw.write(objectAsPropertyString(key, value));
             fw.newLine();
             return;
         }
         if ((value == null && defult == null) || value.equals(defult)) {
             //not saving ddefaults
         } else {
-            fw.write(key + "=" + value.toString());
+            fw.write(objectAsPropertyString(key, value));
             fw.newLine();
         }
     }
 
     TimeShift getTimeShift() {
         return timeShift;
+
     }
 
     private static class SettingsHolder {
