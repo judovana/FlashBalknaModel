@@ -149,6 +149,9 @@ public class SoundProvider {
         WavPlayer test = provider.createPlayer(getUrl(soundPack, all[new Random().nextInt(all.length)]));    
         test.playAsync();
     }
+    public void test() {
+        test(getUsedSoundPack());
+    }
 
     private static class SoundProviderHolder {
 
