@@ -40,13 +40,17 @@ public abstract class BasicTime {
         return TimeUtils.secondsToMinutes(currentValue) + "/" + TimeUtils.secondsToMinutes(originalValue);
     }
 
-    public String getHtmlPreview1() {
+    public String getHtmlPreview1(boolean markup) {
         StringBuilder sb = new StringBuilder();
-        sb.append(getInformaiveTitle())
-                .append("<br>")
-                .append(TimeUtils.secondsToMinutes(originalValue));
-
+        sb.append(getInformaiveTitle());
+        if (markup) {
+            sb.append("<br>");
+        }
+        sb.append("\n");
+        sb.append(TimeUtils.secondsToMinutes(originalValue));
+        if (markup){
         sb = IoUtils.htmlWrap(sb);
+        }
         return sb.toString();
     }
 
@@ -66,7 +70,7 @@ public abstract class BasicTime {
         currentValue--;
     }
 
-    public  void soundLogicRuntime() {
+    public void soundLogicRuntime() {
         BasicTime c = this;
         if (!Model.getModel().isLaud()) {
             return;
@@ -91,7 +95,7 @@ public abstract class BasicTime {
             }
         }
     }
-    
-    public abstract  void play();
+
+    public abstract void play();
 
 }

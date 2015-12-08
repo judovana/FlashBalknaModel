@@ -167,8 +167,9 @@ public class SoundProvider {
          public static void createInstance(WavPlayerProvider wpp) {
             if (instance != null) {
                 throw new RuntimeException("SondProvider already initialised");
-            }
+            } else {
             instance = new SoundProvider(wpp);
+            }
         }
     }
 
