@@ -9,11 +9,19 @@ import java.util.List;
  * @author jvanek
  */
 public class IoUtils {
-
+    
     public static URL getFile(String subPackage, String fileName) {
         String res = subPackage + ".";
         res = "/" + res.replace(".", "/") + fileName;
-        return XmlUtils.class.getResource(res);
+        URL found = IoUtils.class.getResource(res);
+        //regular classapth
+        if (found != null) {
+            return found;
+        }
+        //plugins
+        return JavaPluginProvider.getPluginPaths().findFile(res);
+        
+
     }
 
     public static List<URL> getFiles(String subPackage, String fileRoot, String suffix) {

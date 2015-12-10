@@ -25,6 +25,7 @@ import org.fbb.balkna.model.primitives.Substituable;
 import org.fbb.balkna.model.primitives.TimeShift;
 import org.fbb.balkna.model.primitives.Training;
 import org.fbb.balkna.model.primitives.Trainings;
+import org.fbb.balkna.model.utils.JavaPluginProvider;
 
 /**
  *
@@ -94,8 +95,12 @@ public class Model {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        Exercises.getInstance();
-        Trainings.getInstance();
+        reload();
+    }
+
+    public void reload() {
+        Exercises.reloadInstance();
+        Trainings.reloadInstance();
     }
 
     public void save() {
@@ -112,16 +117,14 @@ public class Model {
 
     public void reload(boolean save, URL... u) throws MalformedURLException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException {
         reloadForJar(save, pfp, u);
-        Exercises.reloadInstance();
-        Trainings.reloadInstance();
+      reload();
     }
 //quick tester
 //    public void reloadForJar() throws MalformedURLException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 //        reloadForJar(false, new URL("file:///home/jvanek/Desktop/urlLoadingTest.jar"));
 //    }
 
-
-    private void reloadForJar(boolean save, PluginFactoryProvider pfp, URL... urls)  throws IOException {
+    private void reloadForJar(boolean save, PluginFactoryProvider pfp, URL... urls) throws IOException {
 
         for (URL u : urls) {
             if (save) {
@@ -133,24 +136,29 @@ public class Model {
 //                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
                 saveUrl(u, savedAs);
                 u = savedAs.toURI().toURL();
+            } else if (!u.getProtocol().toLowerCase().startsWith("file")) {
+                File savedAs = saveUrl(u);
+                u = savedAs.toURI().toURL();
             }
-            try{
-           pfp.addResource(u);
-            }catch(Exception ex){
+            try {
+                pfp.addResource(u);
+            } catch (Exception ex) {
                 throw new IOException(ex);
             }
 
         }
 
     }
+
     //more android comaptible garbage
-    public static File  saveUrl(URL u) throws IOException{
-         File savedAs = File.createTempFile("android", "fucker");
-         saveUrl(u, savedAs);
-         return savedAs;
+    public static File saveUrl(URL u) throws IOException {
+        File savedAs = File.createTempFile("tmpFbbBalkna", "tmpDownload");
+        saveUrl(u, savedAs);
+        return savedAs;
     }
+
     //android comaptible garbage
-    public static void saveUrl(URL u, File savedAs) throws IOException{
+    public static void saveUrl(URL u, File savedAs) throws IOException {
 
         URLConnection connection = u.openConnection();
         InputStream inputStream = new BufferedInputStream(u.openStream(), 10240);
@@ -163,7 +171,6 @@ public class Model {
         }
 
         outputStream.close();
-
 
     }
 
@@ -277,8 +284,8 @@ public class Model {
             return ModelHolder.INSTANCE;
         }
 
-        private static void createInstance(File f, WavPlayerProvider wpp, PluginFactoryProvider pfp) {
-            INSTANCE = new Model(f, wpp, pfp);
+        private static void createInstance(File f, WavPlayerProvider wpp) {
+            INSTANCE = new Model(f, wpp, new JavaPluginProvider());
         }
 
     }
@@ -290,11 +297,11 @@ public class Model {
         return ModelHolder.getInstance();
     }
 
-    public static void createrModel(File f, WavPlayerProvider wpp, PluginFactoryProvider lpfp) {
+    public static void createrModel(File f, WavPlayerProvider wpp) {
         if (ModelHolder.INSTANCE != null) {
             //android.. so silently ignore
         } else {
-            ModelHolder.createInstance(f, wpp, lpfp);
+            ModelHolder.createInstance(f, wpp);
         }
     }
 
