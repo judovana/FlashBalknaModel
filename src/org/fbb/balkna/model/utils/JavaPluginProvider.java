@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.fbb.balkna.model.Model;
 import org.fbb.balkna.model.PluginFactoryProvider;
 
 /**
@@ -18,6 +19,13 @@ import org.fbb.balkna.model.PluginFactoryProvider;
  * @author jvanek
  */
 public class JavaPluginProvider implements PluginFactoryProvider {
+
+    private static void clearCache() {
+        PluginsPaths.searchCache1.clear();
+        PluginsPaths.foundCache1.clear();
+        PluginsPaths.searchCache2.clear();
+        PluginsPaths.foundCache2.clear();
+    }
 
     public static class PluginsPaths {
 
@@ -30,7 +38,7 @@ public class JavaPluginProvider implements PluginFactoryProvider {
             return instance;
         }
 
-        private List<File> paths = new ArrayList<File>();
+        private final List<File> paths = new ArrayList<File>();
 
         public void addPath(String s) {
             if (s == null) {
@@ -65,11 +73,16 @@ public class JavaPluginProvider implements PluginFactoryProvider {
                 }
 
             }
+            s.delete();
+            clearCache();
+            Model.getModel().reload();
         }
 
-        private static final Map<String, URL> foundCache = new HashMap<String, URL>();
+        private static final Map<String, URL> foundCache1 = new HashMap<String, URL>();
+        private static final Map<String, URL> foundCache2 = new HashMap<String, URL>();
         private static final URL NOT_FOUND;
-        private static final Map<File, List<String>> searchCache = new HashMap<File, List<String>>();
+        private static final Map<File, List<String>> searchCache1 = new HashMap<File, List<String>>();
+        private static final Map<File, List<String>> searchCache2 = new HashMap<File, List<String>>();
 
         static {
             try {
@@ -79,46 +92,51 @@ public class JavaPluginProvider implements PluginFactoryProvider {
             }
         }
 
-        URL findFile(String res) {
-            URL cached = foundCache.get(res);
-            if (cached != null) {
-                if (cached == NOT_FOUND) {
-                    return null;
+        URL findFile(String resOrig) {
+            URL cached1 = foundCache1.get(resOrig);
+            String res = resOrig.substring(resOrig.lastIndexOf("/"), resOrig.length());
+            URL cached2 = foundCache2.get(res);
+            if (cached1 != null) {
+                if (cached1 == NOT_FOUND) {
+                    if (cached2 != null) {
+                        if (cached2 == NOT_FOUND) {
+                            return null;
+                        }
+                        return cached2;
+                    }
                 }
-                return cached;
+                return cached1;
             }
             //search for full path
-            URL r1 = searchInZips(res);
+            URL r1 = searchInZips(resOrig, searchCache1);
             if (r1 != null) {
-                foundCache.put(res, r1);
+                foundCache1.put(resOrig, r1);
                 return r1;
             } else {
-                foundCache.put(res, NOT_FOUND);
+                foundCache1.put(resOrig, NOT_FOUND);
             }
-            //desperate attempt to find in fwrongly packed plugins            
+            //desperate attempt to find in wrongly packed plugins            
             //remove path
-            res = res.substring(res.lastIndexOf("/"), res.length());
-
-            URL r2 = searchInZips(res);
-            if (r1 != null) {
-                foundCache.put(res, r2);
+            URL r2 = searchInZips(res, searchCache2);
+            if (r2 != null) {
+                foundCache2.put(res, r2);
                 return r2;
             } else {
-                foundCache.put(res, NOT_FOUND);
+                foundCache2.put(res, NOT_FOUND);
             }
             return null;
 
         }
 
-        private URL searchInZips(String res) {
+        private URL searchInZips(String res, Map<File, List<String>> searchCache) {
             List<File> l = Collections.unmodifiableList(JavaPluginProvider.getPluginPaths().paths);
-            return searchInZips(l, res);
+            return searchInZips(l, res, searchCache);
         }
 
-        private URL searchInZips(List<File> l, String res) {
+        private static URL searchInZips(List<File> l, String res, Map<File, List<String>> searchCache) {
             for (File f : l) {
                 if (f != null && f.exists()) {
-                    URL r = searchInFile(res, f);
+                    URL r = searchInFile(res, f, searchCache);
                     if (r != null) {
                         return r;
                     }
@@ -127,7 +145,7 @@ public class JavaPluginProvider implements PluginFactoryProvider {
             return null;
         }
 
-        private URL searchInFile(String res, File f) {
+        private static URL searchInFile(String res, File f, Map<File, List<String>> searchCache) {
             List<String> l = searchCache.get(f);
             URL result = null;
             if (l == null) {
@@ -173,8 +191,7 @@ public class JavaPluginProvider implements PluginFactoryProvider {
 
     @Override
     public void addResource(URL u) {
-        PluginsPaths.searchCache.clear();
-        PluginsPaths.foundCache.clear();
+        clearCache();
         getPluginPaths().addPath(u.getFile());
 
     }
