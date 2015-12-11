@@ -15,6 +15,7 @@ public class Packages {
     public static final String IMAGES_TRA = IMAGES + ".trainings";
     public static final String SOUND_PACK = DATA + ".soundpacks";
     public static final String[] SOUND_PACKS = {"fbbhorror", "cs",  "cs_female", "cs_male",  "en",  "en_female",  "en_male"};
+    public static final String[] LANGUAGES = {" ", "cs", "en"};
     public static final String DEFAULT_SOUND_PACK = SOUND_PACKS[1];
 
 }

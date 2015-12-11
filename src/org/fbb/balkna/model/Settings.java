@@ -17,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import org.fbb.balkna.Packages;
 import org.fbb.balkna.model.primitives.TimeShift;
+import org.fbb.balkna.swing.locales.SwingTranslator;
 
 /**
  *
@@ -206,6 +207,7 @@ public class Settings {
         } else if (key.equals("forcedLanguage")) {
             forcedLanguage = value;
             Translator.load(value);
+            SwingTranslator.load(value);
         } else if (key.equals("forcedSoundFont")) {
             forcedSoundFont = value;
             SoundProvider.getInstance().load(value);

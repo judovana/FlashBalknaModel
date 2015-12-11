@@ -21,6 +21,7 @@ import org.fbb.balkna.model.primitives.TimeShift;
 import org.fbb.balkna.model.primitives.Training;
 import org.fbb.balkna.model.primitives.Trainings;
 import org.fbb.balkna.model.utils.JavaPluginProvider;
+import org.fbb.balkna.swing.locales.SwingTranslator;
 
 /**
  *
@@ -112,7 +113,7 @@ public class Model {
 
     public void reload(boolean save, URL... u) throws MalformedURLException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException {
         reloadForJar(save, pfp, u);
-      reload();
+        reload();
     }
 //quick tester
 //    public void reloadForJar() throws MalformedURLException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -251,6 +252,7 @@ public class Model {
     public void setLanguage(String string) {
         Settings.getSettings().setForcedLanguage(string);
         Translator.load(string);
+        SwingTranslator.load(string);
     }
 
     public String getTitle() {
