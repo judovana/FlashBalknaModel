@@ -162,7 +162,7 @@ public class Training implements Substituable {
                     .append("<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>")
                     .append("</head><body>");
             sb.append("<div>");
-            sb.append("<a href='" + IMGS_SUBDIR + "/").append(Model.getDefaultImageName())
+            sb.append("<a href='http://flashbb.cz/aktualne'").append(Model.getDefaultImageName())
                     .append("'>  <img align='right' src='" + IMGS_SUBDIR + "/")
                     .append(Model.getDefaultImageName())
                     .append("' width='150' height='150'>  </a>");
