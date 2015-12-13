@@ -29,6 +29,8 @@ public class Settings {
     private static final boolean allowSkippingDefault = false;
     private static final boolean pauseOnChangeDefault = false;
     private static final boolean pauseOnExerciseDefault = false;
+    private static final boolean invertScreenCompressDefault = false;
+    private static final boolean allowScreenChangeDefault = true;
     private static final boolean ratioForcedDefault = true;
     private static final int imagesOnTimerSpeedDefault = 2;
     private static final String forcedLanguageDefault = null;
@@ -42,6 +44,8 @@ public class Settings {
     private boolean pauseOnChange = pauseOnChangeDefault;
     private boolean pauseOnExercise = pauseOnExerciseDefault;
     private boolean ratioForced = ratioForcedDefault;
+    private boolean invertScreenCompress = invertScreenCompressDefault;
+    private boolean allowScreenChange = allowScreenChangeDefault;
     private int imagesOnTimerSpeed = imagesOnTimerSpeedDefault;
     private String forcedLanguage = forcedLanguageDefault;
     private String forcedSoundFont = forcedSoundFontDefault;
@@ -176,6 +180,8 @@ public class Settings {
             writeObjectAsProperty("imagesOnTimerSpeed", imagesOnTimerSpeed, imagesOnTimerSpeedDefault, fw);
             writeObjectAsProperty("forcedLanguage", forcedLanguage, forcedLanguageDefault, fw);
             writeObjectAsProperty("forcedSoundFont", forcedSoundFont, forcedSoundFontDefault, fw);
+            writeObjectAsProperty("allowScreenChange", allowScreenChange, allowScreenChangeDefault, fw);
+            writeObjectAsProperty("invertScreenCompress", invertScreenCompress, invertScreenCompressDefault, fw);
         } finally {
             fw.close();
         }
@@ -198,6 +204,10 @@ public class Settings {
             allowSkipping = Boolean.valueOf(value);
         } else if (key.equals("pauseOnChange")) {
             pauseOnChange = Boolean.valueOf(value);
+        } else if (key.equals("allowScreenChange")) {
+            allowScreenChange = Boolean.valueOf(value);
+        } else if (key.equals("invertScreenCompress")) {
+            invertScreenCompress = Boolean.valueOf(value);
         } else if (key.equals("pauseOnExercise")) {
             pauseOnExercise = Boolean.valueOf(value);
         } else if (key.equals("ratioForced")) {
@@ -220,6 +230,10 @@ public class Settings {
             " Default: " + objectAsPropertyString("laud", laudDefault),
             objectAsPropertyString("allowSkipping", allowSkipping),
             " Default: " + objectAsPropertyString("allowSkipping", allowSkippingDefault),
+            objectAsPropertyString("allowScreenChange", allowScreenChange),
+            " Default: " + objectAsPropertyString("allowScreenChange", allowScreenChangeDefault),
+            objectAsPropertyString("invertScreenCompress", invertScreenCompress),
+            " Default: " + objectAsPropertyString("invertScreenCompress", invertScreenCompressDefault),
             objectAsPropertyString("pauseOnChange", pauseOnChange),
             " Default: " + objectAsPropertyString("pauseOnChange", pauseOnChangeDefault),
             objectAsPropertyString("pauseOnExercise", pauseOnExercise),
@@ -290,5 +304,21 @@ public class Settings {
     public static Settings getSettings() {
         return SettingsHolder.getInstance();
     }
+
+    public boolean isAllowScreenChange() {
+        return allowScreenChange;
+    }
+
+    public boolean isInvertScreenCompress() {
+        return invertScreenCompress;
+    }
+
+    public void setAllowScreenChange(boolean allowScreenChange) {
+        this.allowScreenChange = allowScreenChange;
+    }
+
+    public void setInvertScreenCompress(boolean invertScreenCompress) {
+        this.invertScreenCompress = invertScreenCompress;
+    }    
 
 }
