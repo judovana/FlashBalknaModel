@@ -1,5 +1,6 @@
 package org.fbb.balkna.model;
 
+import org.fbb.balkna.model.settings.Settings;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -266,6 +267,10 @@ public class Model {
 
     public TimeShift getTimeShift() {
         return Settings.getSettings().getTimeShift();
+    }
+
+    public void resetDefaults() {
+        Settings.getSettings().resetDefaults();
     }
 
     private static class ModelHolder {
