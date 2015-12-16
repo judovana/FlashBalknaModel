@@ -42,10 +42,24 @@ public class Settings {
     private final StringSettingsRecord forcedLanguage = new StringSettingsRecord(null, "forcedLanguage");
     private final StringSettingsRecord forcedSoundFont = new StringSettingsRecord(Packages.DEFAULT_SOUND_PACK, "forcedSoundFont");
 
+    private final IntSettingsRecord trainingDelimiterSize = new IntSettingsRecord(15, "trainingDelimiterSize");
+    private final IntSettingsRecord mainTimerSize = new IntSettingsRecord(0, "mainTimerSize");
+    //using int for color becasue of android...
+    private final IntSettingsRecord trainingDelimiterColor = new IntSettingsRecord(16763904, "trainingDelimiterColor");
+    private final IntSettingsRecord selectedItemColor = new IntSettingsRecord(65535, "selectedItemColor");
+    private final IntSettingsRecord mainTimerColor = new IntSettingsRecord(null, "mainTimerColor");
+
+    private final StringSettingsRecord mainTimerPositionV = new StringSettingsRecord("center", "mainTimerPositionV");
+    private final StringSettingsRecord mainTimerPositionH = new StringSettingsRecord("center", "mainTimerPositionH");
+
     private final SettingsRecord[] ALL_SETTINGS = new SettingsRecord[]{
         laud, allowSkipping, pauseOnChange, pauseOnExercise, ratioForced, invertScreenCompress,
-        allowScreenChange, imagesOnTimerSpeed, forcedLanguage, forcedSoundFont};
+        allowScreenChange, imagesOnTimerSpeed, forcedLanguage, forcedSoundFont,
+        trainingDelimiterSize, mainTimerSize, trainingDelimiterColor, selectedItemColor, mainTimerColor,
+        mainTimerPositionV, mainTimerPositionH
+    };
 
+    
     private final TimeShift timeShift = new TimeShift(timeShiftDefualt);
 
     /**
@@ -239,22 +253,28 @@ public class Settings {
         for (int i = 0; i < ALL_SETTINGS.length; i++) {
             SettingsRecord s = ALL_SETTINGS[i];
             s.setValue(s.getDefaultValue());
-            
-        }
+
+        
+
+
+
+
+
+}
     }
 
     private static class SettingsHolder {
 
-        //https://en.wikipedia.org/wiki/Double-checked_locking#Usage_in_Java
-        //https://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom
-        private static final Settings INSTANCE = new Settings();
+    //https://en.wikipedia.org/wiki/Double-checked_locking#Usage_in_Java
+    //https://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom
+    private static final Settings INSTANCE = new Settings();
 
-        private static Settings getInstance() {
-            return SettingsHolder.INSTANCE;
-        }
+    private static Settings getInstance() {
+        return SettingsHolder.INSTANCE;
     }
+}
 
-    public static Settings getSettings() {
+public static Settings getSettings() {
         return SettingsHolder.getInstance();
     }
 
@@ -274,4 +294,61 @@ public class Settings {
         this.invertScreenCompress.setValue(invertScreenCompress);
     }
 
+    public Integer getTrainingDelimiterSize() {
+        return trainingDelimiterSize.getValue();
+    }
+
+    public Integer getMainTimerSize() {
+        return mainTimerSize.getValue();
+    }
+
+    public Integer getTrainingDelimiterColor() {
+        return trainingDelimiterColor.getValue();
+    }
+
+    public Integer getSelectedItemColor() {
+        return selectedItemColor.getValue();
+    }
+
+    ;
+    public Integer getMainTimerColor() {
+        return mainTimerColor.getValue();
+    }
+
+    public String getMainTimerPositionV() {
+        return mainTimerPositionV.getValue();
+    }
+
+    public String getMainTimerPositionH() {
+        return mainTimerPositionH.getValue();
+    }
+    
+    public void setTrainingDelimiterSize(Integer i) {
+        trainingDelimiterSize.setValue(i);
+    }
+
+    public void setMainTimerSize(Integer i) {
+        mainTimerSize.setValue(i);
+    }
+
+    public void setTrainingDelimiterColor(Integer i) {
+        trainingDelimiterColor.setValue(i);
+    }
+
+    public void setSelectedItemColor(Integer i) {
+        selectedItemColor.setValue(i);
+    }
+
+    ;
+    public void setMainTimerColor(Integer i) {
+        mainTimerColor.setValue(i);
+    }
+
+    public void setMainTimerPositionV(String i) {
+        mainTimerPositionV.setValue(i);
+    }
+
+    public void setMainTimerPositionH(String i) {
+        mainTimerPositionH.setValue(i);
+    }
 }

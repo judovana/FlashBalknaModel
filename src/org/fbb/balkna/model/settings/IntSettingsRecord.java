@@ -13,7 +13,11 @@ public class IntSettingsRecord  extends SettingsRecord<Integer>{
     
     @Override
     public  void fromString(String t){
+        if (t.equals("null")){
+            setValue(null);
+        } else {
         setValue(Integer.valueOf(t));
+        }
         
     }
     
