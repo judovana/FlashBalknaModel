@@ -49,9 +49,18 @@ public class Settings {
     private final IntSettingsRecord selectedItemColor = new IntSettingsRecord(65535, "selectedItemColor");
     private final IntSettingsRecord mainTimerColor = new IntSettingsRecord(null, "mainTimerColor");
 
-    private final StringSettingsRecord mainTimerPositionV = new StringSettingsRecord("center", "mainTimerPositionV");
-    private final StringSettingsRecord mainTimerPositionH = new StringSettingsRecord("center", "mainTimerPositionH");
+    private final StringSettingsRecord mainTimerPositionV = new StringSettingsRecord(VPOS_CENTER, "mainTimerPositionV");
+    private final StringSettingsRecord mainTimerPositionH = new StringSettingsRecord(HPOS_CENTER, "mainTimerPositionH");
 
+    public static final String HPOS_CENTER = "-> center <-";
+    public static final String HPOS_L = "<-- L (left)";
+    public static final String HPOS_R = "(right) R -->";
+    public static final String[] HPOSITIONS = new String[]{HPOS_L, HPOS_CENTER, HPOS_R};    
+    public static final String VPOS_CENTER = "^centerˇ";
+    public static final String VPOS_T = "^^up^^";
+    public static final String VPOS_B = "ˇˇdownˇˇ";
+    public static final String[] VPOSITIONS = new String[]{VPOS_T, VPOS_CENTER, VPOS_B};
+    
     private final SettingsRecord[] ALL_SETTINGS = new SettingsRecord[]{
         laud, allowSkipping, pauseOnChange, pauseOnExercise, ratioForced, invertScreenCompress,
         allowScreenChange, imagesOnTimerSpeed, forcedLanguage, forcedSoundFont,
