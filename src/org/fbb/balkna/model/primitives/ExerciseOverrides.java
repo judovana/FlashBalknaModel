@@ -85,4 +85,31 @@ public class ExerciseOverrides {
         return targetId;
     }
 
+    ExerciseOverrides transform(TrainingOverrides override) {
+        Exercise src = Exercises.getInstance().getExerciseById(targetId);
+        Integer t = time;
+        Integer p = pause;
+        Integer it = iterations;
+        Integer r = rest;
+        String id = targetId;
+        
+        if (t == null){
+            t = src.getTime();
+        }
+        if (p == null){
+            p = src.getPause();
+        }
+          if (it == null){
+            it = src.getIterations();
+        }
+          if (r == null){
+            r = src.getRest();
+        }
+        double tt = (double)t * override.getTime();
+        double pp = (double)p * override.getPause();
+        double iitt = (double)it * override.getIterations();
+        double rr = (double)r * override.getRest();
+        return new ExerciseOverrides((int)tt, (int)pp, (int)iitt, (int)rr, targetId);
+    }
+
 }

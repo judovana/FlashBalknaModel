@@ -17,6 +17,7 @@ import java.util.Random;
 import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BasicTime;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BigRestTime;
+import org.fbb.balkna.model.primitives.Cycle;
 import org.fbb.balkna.model.primitives.Cycles;
 import org.fbb.balkna.model.primitives.Exercise;
 import org.fbb.balkna.model.primitives.ExerciseOverrides;
@@ -180,6 +181,11 @@ public class Model {
 
     public List<Training> getTraingNames() {
         List<Training> l = Trainings.getInstance().getTrainings();
+        return l;
+    }
+    
+       public List<Cycle> getCycles() {
+        List<Cycle> l = Cycles.getInstance().getCycles();
         return l;
     }
 

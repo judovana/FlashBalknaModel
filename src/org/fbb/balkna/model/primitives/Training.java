@@ -38,6 +38,16 @@ public class Training implements Substituable {
     public Training(Exercise ex) {
         this(ex.getId(), ex.getName(), ex.getDescription(), ex.getLocalisedNames(), ex.getLocalisedDescriptions(), new ArrayList<String>(), convert(ex));
     }
+    
+    
+      
+      public Training transform(TrainingOverrides override){
+          final List<ExerciseOverrides> nwOverride = new ArrayList<ExerciseOverrides>(exerciseOverrides.size());
+          for (ExerciseOverrides ow : exerciseOverrides) {
+              nwOverride.add(ow.transform(override));
+          }
+          return new Training(id, name, id, localisedNames, localisedDescriptions, images, nwOverride);
+      }
 
     static List<ExerciseOverrides> convert(Exercise ex) {
         ArrayList<ExerciseOverrides> l = new ArrayList<ExerciseOverrides>(1);

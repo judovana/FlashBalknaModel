@@ -65,5 +65,14 @@ public class Trainings {
     public List<Training> getTrainings() {
         return Collections.unmodifiableList(trainings);
     }
+    
+    public Training getTrainingById(String id) {
+        for (Training training : trainings) {
+            if (training.getId().equals(id)){
+                return  training;
+            }
+        }
+        return null;
+    }
 
 }

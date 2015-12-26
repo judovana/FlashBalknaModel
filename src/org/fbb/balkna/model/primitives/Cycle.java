@@ -33,9 +33,9 @@ public class Cycle implements Substituable {
     private final String description;
     private final List<LocalisedString> localisedDescriptions;
     private final List<String> images;
-    private final List<ExerciseOverrides> exerciseOverrides;
+    private final List<TrainingOverrides> trainings;
 
-    private Cycle(String id, String name, String des, List<LocalisedString> localisedNames, List<LocalisedString> localisedDescriptions, List<String> images, List<ExerciseOverrides> exerciseOverrides) {
+    private Cycle(String id, String name, String des, List<LocalisedString> localisedNames, List<LocalisedString> localisedDescriptions, List<String> images, List<TrainingOverrides> trainings) {
         if (id == null) {
             throw new NullPointerException();
         }
@@ -45,7 +45,7 @@ public class Cycle implements Substituable {
         this.localisedNames = localisedNames;
         this.localisedDescriptions = localisedDescriptions;
         this.images = images;
-        this.exerciseOverrides = exerciseOverrides;
+        this.trainings = trainings;
         Model.substitute(images, this);
     }
 
@@ -57,7 +57,7 @@ public class Cycle implements Substituable {
         String description = null;
         List<LocalisedString> localisedDescriptions = new ArrayList<LocalisedString>();
         List<String> images = new ArrayList<String>();
-        List<ExerciseOverrides> exerciseOverrides = new ArrayList<ExerciseOverrides>();
+        List<TrainingOverrides> overrides = new ArrayList<TrainingOverrides>();
         List<Element> interlayer = XmlUtils.getRealChilds(node);
         for (Element n : interlayer) {
             if (n.getNodeName().equals(ID)) {
@@ -70,28 +70,16 @@ public class Cycle implements Substituable {
                 localisedDescriptions = XmlUtils.getLocalisedDescriptions(n);
             } else if (n.getNodeName().equals(IMAGES)) {
                 images = XmlUtils.getImages(n);
-            } else if (n.getNodeName().equals(EXERCISES)) {
+            } else if (n.getNodeName().equals(TRAININGS)) {
                 List<Element> exerciseElements = XmlUtils.getRealChilds(n);
                 for (Element exerciseElement : exerciseElements) {
-                    if (exerciseElement.getNodeName().equals(EXERCISE)) {
-                        exerciseOverrides.add(ExerciseOverrides.parse(exerciseElement));
-                    } else if (exerciseElement.getNodeName().equals(EXERCISES_SET)) {
-                        int clone = 1;
-                        String count = exerciseElement.getAttribute("count");
-                        if (count != null) {
-                            clone = Integer.valueOf(count);
-                        }
-                        List<Element> exerciseSetsElements = XmlUtils.getRealChilds(exerciseElement);
-                        for (int x = 0; x < clone; x++) {
-                            for (Element setExercise : exerciseSetsElements) {
-                                exerciseOverrides.add(ExerciseOverrides.parse(setExercise));
-                            }
-                        }
+                    if (exerciseElement.getNodeName().equals(TRAINING)) {
+                        overrides.add(TrainingOverrides.parse(exerciseElement));
                     }
                 }
             }
         }
-        return new Cycle(id, name, description, localisedNames, localisedDescriptions, images, exerciseOverrides);
+        return new Cycle(id, name, description, localisedNames, localisedDescriptions, images, overrides);
     }
 
     @Override
@@ -137,20 +125,23 @@ public class Cycle implements Substituable {
         return r;
     }
 
-    public List<ExerciseOverrides> getExerciseOverrides() {
-        return Collections.unmodifiableList(exerciseOverrides);
+    public List<TrainingOverrides> getTrainingOverrides() {
+        return Collections.unmodifiableList(trainings);
     }
 
-    public List<String> getExerciseImages() {
-        List<String> r = new ArrayList<String>();
-        List<ExerciseOverrides> l1 = getExerciseOverrides();
-        for (ExerciseOverrides eov : l1) {
-            r.addAll(Exercises.getInstance().getExerciseById(eov.getTargetId()).getImages());
-
-        }
-        return r;
+    public Training getTraining(int which) {
+        return trainings.get(which).getTraining();
     }
 
+//    public List<String> getExerciseImages() {
+//        List<String> r = new ArrayList<String>();
+//        List<TrainingOverrides> l1 = getExerciseOverrides();
+//        for (ExerciseOverrides eov : l1) {
+//            r.addAll(Exercises.getInstance().getExerciseById(eov.getTargetId()).getImages());
+//
+//        }
+//        return r;
+//    }
     public String getStory() {
         return getStory(false);
     }
@@ -163,7 +154,7 @@ public class Cycle implements Substituable {
                     .append("</head><body>");
             sb.append("<div>");
             sb.append("<a href='http://flashbb.cz/aktualne'").append(Model.getDefaultImageName())
-                    .append("'>  <img align='right' src='" + IMGS_SUBDIR + "/")
+                    .append("'>  <img align='right' src='" + Training.IMGS_SUBDIR + "/")
                     .append(Model.getDefaultImageName())
                     .append("' width='150' height='150'>  </a>");
             sb.append("</div>");
@@ -181,8 +172,8 @@ public class Cycle implements Substituable {
         String[] iims = getImages();
         for (String iim : iims) {
             if (html) {
-                sb.append("<a href='" + IMGS_SUBDIR + "/").append(iim)
-                        .append("'>  <img src='" + IMGS_SUBDIR + "/")
+                sb.append("<a href='" + Training.IMGS_SUBDIR + "/").append(iim)
+                        .append("'>  <img src='" + Training.IMGS_SUBDIR + "/")
                         .append(iim)
                         .append("' width='150' height='100'>  </a>");
             } else {
@@ -197,39 +188,56 @@ public class Cycle implements Substituable {
             breakLine(html, sb);
             breakLine(html, sb);
         }
-        MergedExerciseWrapper m = getMergedExercises(Model.getModel().getTimeShift());
-        sb.append(R("TotalTime", TimeUtils.secondsToHours(m.getTime())));
-        breakLine(html, sb);
-        sb.append(R("TotalTimeExercise", TimeUtils.secondsToHours(m.getActiveTime())));
-        breakLine(html, sb);
-        sb.append(R("TotalTimeResting", TimeUtils.secondsToHours(m.getRestTime())));
-        breakLine(html, sb);
-        sb.append(R("TotalExercises", m.getIterations()));
-        breakLine(html, sb);
-        sb.append(R("TotalDifferentExercises", m.getSize()));
-        breakLine(html, sb);
-        sb.append("----");
-        breakLine(html, sb);
-        sb.append(m.getStory(html));
+        int i = 0;
+        for (TrainingOverrides t : getTrainingOverrides()) {
+            i++;
+            sb.append(t.getHeader(i, html));
+        }
+        i = 0;
+        for (TrainingOverrides t : getTrainingOverrides()) {
+            i++;
+            if (!html) {
+                breakLine(html, sb);
+                sb.append("***** ").append(i).append(" *****");
+                breakLine(html, sb);
+                sb.append("***** ").append(i).append(" *****");
+                breakLine(html, sb);
+            } else {
+                breakLine(html, sb);
+                sb.append("<h4>***** ").append(i).append(" *****</h4>");
+                breakLine(html, sb);
+            }
+            String s = t.getTraining().getStoryPart(html);
+            sb.append(s);
+        }
+//        MergedExerciseWrapper m = getMergedExercises(Model.getModel().getTimeShift());
+//        sb.append(R("TotalTime", TimeUtils.secondsToHours(m.getTime())));
+//        breakLine(html, sb);
+//        sb.append(R("TotalTimeExercise", TimeUtils.secondsToHours(m.getActiveTime())));
+//        breakLine(html, sb);
+//        sb.append(R("TotalTimeResting", TimeUtils.secondsToHours(m.getRestTime())));
+//        breakLine(html, sb);
+//        sb.append(R("TotalExercises", m.getIterations()));
+//        breakLine(html, sb);
+//        sb.append(R("TotalDifferentExercises", m.getSize()));
+//        breakLine(html, sb);
+//        sb.append("----");
+//        breakLine(html, sb);
+//        sb.append(m.getStory(html));
         if (html) {
             sb.append("</body></html>");
         }
         return sb.toString();
     }
 
-    public MergedExerciseWrapper getMergedExercises(TimeShift t) {
-        List<ExerciseOverrides> l = getExerciseOverrides();
-        List<MergedExercise> r = new ArrayList<MergedExercise>(l.size());
-        for (ExerciseOverrides get : l) {
-            r.add(MergedExercise.MergedExercise(get, t));
-        }
-        return new MergedExerciseWrapper(r);
-    }
-
-  
-
-    public static final String IMGS_SUBDIR = "images";
-
+//    public MergedExerciseWrapper getMergedExercises(TimeShift t) {
+//        List<ExerciseOverrides> l = getExerciseOverrides();
+//        List<MergedExercise> r = new ArrayList<MergedExercise>(l.size());
+//        for (ExerciseOverrides get : l) {
+//            r.add(MergedExercise.MergedExercise(get, t));
+//        }
+//        return new MergedExerciseWrapper(r);
+//    }
     public File export(File root, ImagesSaver im) throws FileNotFoundException, IOException {
         String dir = "exported.html";
         String index1 = "index.html";
@@ -238,7 +246,7 @@ public class Cycle implements Substituable {
         mainDir.mkdir();
         File indexFile1 = new File(mainDir, index1);
         File indexFile2 = new File(mainDir, index2);
-        File imgDir = new File(mainDir, IMGS_SUBDIR);
+        File imgDir = new File(mainDir, Training.IMGS_SUBDIR);
         imgDir.mkdir();
         //jd6 comaptible
         BufferedWriter bw1 = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(indexFile1)));
@@ -257,8 +265,8 @@ public class Cycle implements Substituable {
             bw2.close();
         }
         String[] ti = getImages();
-        List<String> ei = getExerciseImages();
-        im.writeExercisesImagesToDir(imgDir, ei);
+//        List<String> ei = getExerciseImages();
+//        im.writeExercisesImagesToDir(imgDir, ei);
         im.writeTrainingsImagesToDir(imgDir, Arrays.asList(ti));
         return indexFile1;
     }
