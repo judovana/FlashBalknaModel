@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  *
  * @author jvanek
  */
-public class Training implements Substituable {
+public class Cycle implements Substituable {
 
     private final String id;
     private final String name;
@@ -35,17 +35,7 @@ public class Training implements Substituable {
     private final List<String> images;
     private final List<ExerciseOverrides> exerciseOverrides;
 
-    public Training(Exercise ex) {
-        this(ex.getId(), ex.getName(), ex.getDescription(), ex.getLocalisedNames(), ex.getLocalisedDescriptions(), new ArrayList<String>(), convert(ex));
-    }
-
-    static List<ExerciseOverrides> convert(Exercise ex) {
-        ArrayList<ExerciseOverrides> l = new ArrayList<ExerciseOverrides>(1);
-        l.add(new ExerciseOverrides(ex.getTime(), ex.getPause(), ex.getIterations(),ex.getRest(), ex.getId()));
-        return l;
-    }
-
-    private Training(String id, String name, String des, List<LocalisedString> localisedNames, List<LocalisedString> localisedDescriptions, List<String> images, List<ExerciseOverrides> exerciseOverrides) {
+    private Cycle(String id, String name, String des, List<LocalisedString> localisedNames, List<LocalisedString> localisedDescriptions, List<String> images, List<ExerciseOverrides> exerciseOverrides) {
         if (id == null) {
             throw new NullPointerException();
         }
@@ -59,7 +49,7 @@ public class Training implements Substituable {
         Model.substitute(images, this);
     }
 
-    public static Training parse(final Node node) {
+    public static Cycle parse(final Node node) {
 
         String id = null;
         String name = null;
@@ -101,7 +91,7 @@ public class Training implements Substituable {
                 }
             }
         }
-        return new Training(id, name, description, localisedNames, localisedDescriptions, images, exerciseOverrides);
+        return new Cycle(id, name, description, localisedNames, localisedDescriptions, images, exerciseOverrides);
     }
 
     @Override
@@ -171,17 +161,6 @@ public class Training implements Substituable {
             sb.append("<html><head>")
                     .append("<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>")
                     .append("</head><body>");
-        }
-        sb.append(getStoryPart(html));
-        if (html) {
-            sb.append("</body></html>");
-        }
-        return sb.toString();
-    }
-
-    public String getStoryPart(boolean html) {
-        StringBuilder sb = new StringBuilder();
-        if (html) {
             sb.append("<div>");
             sb.append("<a href='http://flashbb.cz/aktualne'").append(Model.getDefaultImageName())
                     .append("'>  <img align='right' src='" + IMGS_SUBDIR + "/")
@@ -232,6 +211,9 @@ public class Training implements Substituable {
         sb.append("----");
         breakLine(html, sb);
         sb.append(m.getStory(html));
+        if (html) {
+            sb.append("</body></html>");
+        }
         return sb.toString();
     }
 
@@ -243,6 +225,8 @@ public class Training implements Substituable {
         }
         return new MergedExerciseWrapper(r);
     }
+
+  
 
     public static final String IMGS_SUBDIR = "images";
 

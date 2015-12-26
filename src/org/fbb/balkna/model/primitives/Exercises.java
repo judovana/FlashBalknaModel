@@ -1,5 +1,8 @@
 package org.fbb.balkna.model.primitives;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +91,16 @@ public class Exercises {
         }catch(Exception ex){
             throw  new RuntimeException(ex);
         }
+    }
+    
+    public List<Exercise> getExercises() {
+        List<Exercise> l = new  ArrayList<Exercise>(exercises.size());
+        Collection<Exercise> q = exercises.values();
+        for (Exercise q1 : q) {
+                l.add(q1);
+            }
+        //return Collections.unmodifiableList(l);
+        return l;
     }
 
 }

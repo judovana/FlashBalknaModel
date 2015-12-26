@@ -10,11 +10,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BasicTime;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BigRestTime;
+import org.fbb.balkna.model.primitives.Cycles;
+import org.fbb.balkna.model.primitives.Exercise;
 import org.fbb.balkna.model.primitives.ExerciseOverrides;
 import org.fbb.balkna.model.primitives.Exercises;
 import org.fbb.balkna.model.primitives.Substituable;
@@ -35,8 +39,10 @@ public class Model {
     public static void substitute(List<String> images, Substituable a) {
         for (int i = 0; i < images.size(); i++) {
             String get = images.get(i);
-            get = get.replace("%{id}", a.getId());
-            images.set(i, get);
+            String get2 = get.replace("%{id}", a.getId());
+            if (!get2.equals(get)) {
+                images.set(i, get2);
+            }
 
         }
     }
@@ -98,6 +104,7 @@ public class Model {
     public void reload() {
         Exercises.reloadInstance();
         Trainings.reloadInstance();
+        Cycles.reloadInstance();
     }
 
     public void save() {
@@ -173,14 +180,19 @@ public class Model {
 
     public List<Training> getTraingNames() {
         List<Training> l = Trainings.getInstance().getTrainings();
+        return l;
+    }
 
-//        Collections.sort(l, new Comparator<Training>() {
-//
-//            @Override
-//            public int compare(Training o1, Training o2) {
-//                return o1.getName().compareTo(o2.getName());
-//            }
-//        });
+    public List<Exercise> getExercises() {
+        List<Exercise> l = Exercises.getInstance().getExercises();
+
+        Collections.sort(l, new Comparator<Exercise>() {
+
+            @Override
+            public int compare(Exercise o1, Exercise o2) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            }
+        });
         return l;
     }
 

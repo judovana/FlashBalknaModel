@@ -152,5 +152,23 @@ public class Exercise implements Substituable {
         return Collections.unmodifiableList(images);
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    List<LocalisedString> getLocalisedNames() {
+        return localisedNames;
+    }
+
+    List<LocalisedString> getLocalisedDescriptions() {
+        return localisedDescriptions;
+    }
+    
+    
+    
+    
+    
+
     
 }

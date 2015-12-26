@@ -22,6 +22,7 @@ public class XmlConstants {
     public static final String EXERCISE = "exercise";
     public static final String EXERCISES_SET = "exercises-set";
     public static final String TRAINING = "training";
+    public static final String CYCLE = "cycle";
     public static final String EXERCISES = "exercises";
     public static final String OVERRIDES = "overrides";
     public static final String SET_DEFAULTS = "set-defaults";
