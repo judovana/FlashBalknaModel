@@ -1,11 +1,14 @@
 package org.fbb.balkna.model.primitives;
 
+import java.io.BufferedReader;
 import org.fbb.balkna.model.ImagesSaver;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,9 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import static org.fbb.balkna.model.Translator.R;
 import org.fbb.balkna.model.Model;
-import org.fbb.balkna.model.merged.MergedExercise;
-import org.fbb.balkna.model.merged.MergedExerciseWrapper;
-import org.fbb.balkna.model.utils.TimeUtils;
+import org.fbb.balkna.model.primitives.history.Record;
 import org.fbb.balkna.model.utils.XmlUtils;
 import org.w3c.dom.Node;
 import static org.fbb.balkna.model.utils.XmlConstants.*;
@@ -34,6 +35,9 @@ public class Cycle implements Substituable {
     private final List<LocalisedString> localisedDescriptions;
     private final List<String> images;
     private final List<TrainingOverrides> trainings;
+    
+    private int trainingPointer = 1;
+    private List<Record> statistics = new ArrayList<Record>();
 
     private Cycle(String id, String name, String des, List<LocalisedString> localisedNames, List<LocalisedString> localisedDescriptions, List<String> images, List<TrainingOverrides> trainings) {
         if (id == null) {
@@ -276,6 +280,46 @@ public class Cycle implements Substituable {
             sb.append("<br>");
         }
         sb.append("\n");
+    }
+    
+    private static File getStatsFile(){
+        File f =  new File(Model.getModel().getStatsDir(), "cycles");
+        if (!f.exists()){
+            f.mkdirs();
+        }
+        return f;
+    }
+    
+     private File getFile(){
+        return new File(getStatsFile(), getId());
+    }
+
+    public void load() {
+        try{
+            loadUncought();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    public void loadUncought() throws IOException {
+        File f = getFile();
+          if (f.exists()) {
+                BufferedReader fr = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+                String counter = fr.readLine();
+                if (counter == null){
+                    return;
+                }
+                trainingPointer= Integer.valueOf(counter.trim());
+                statistics.clear();
+                while (true) {
+                    String s = fr.readLine();
+                    if (s == null) {
+                        break;
+                    }
+                    statistics.add(Record.fromString(s));
+                }
+            }
+        
     }
 
 }

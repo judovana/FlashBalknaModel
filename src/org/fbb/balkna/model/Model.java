@@ -73,10 +73,18 @@ public class Model {
     }
     private final File settingsDir;
     private final File pluginsDir;
+    private final File statsDir;
+
+    public File getStatsDir() {
+        return statsDir;
+    }
+    
+    
 
     private Model(File settingsDir, WavPlayerProvider wavProvider, PluginFactoryProvider lpfp) {
         this.settingsDir = settingsDir;
         this.pluginsDir = new File(settingsDir, "plugins");
+        this.statsDir = new File(settingsDir, "stats");
         this.pfp = lpfp;
         SoundProvider.createInstance(wavProvider);
         try {
@@ -116,7 +124,7 @@ public class Model {
         }
     }
 
-    public void load() throws IOException {
+    final public void load() throws IOException {
         Settings.getSettings().load(settingsDir);
     }
 
