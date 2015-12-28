@@ -1,4 +1,4 @@
-package org.fbb.balkna.model.primitives;
+package org.fbb.balkna.model;
 
 /**
  *
@@ -8,5 +8,6 @@ public interface Substituable {
     
     
     public String getId();
+    public String getName();
             
 }

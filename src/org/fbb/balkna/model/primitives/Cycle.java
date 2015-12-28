@@ -1,14 +1,13 @@
 package org.fbb.balkna.model.primitives;
 
+import org.fbb.balkna.model.Substituable;
 import java.io.BufferedReader;
 import org.fbb.balkna.model.ImagesSaver;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +15,11 @@ import java.util.Collections;
 import java.util.List;
 import static org.fbb.balkna.model.Translator.R;
 import org.fbb.balkna.model.Model;
+import org.fbb.balkna.model.Statisticable;
+import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
 import org.fbb.balkna.model.primitives.history.Record;
+import org.fbb.balkna.model.primitives.history.RecordType;
+import org.fbb.balkna.model.utils.IoUtils;
 import org.fbb.balkna.model.utils.XmlUtils;
 import org.w3c.dom.Node;
 import static org.fbb.balkna.model.utils.XmlConstants.*;
@@ -26,7 +29,7 @@ import org.w3c.dom.Element;
  *
  * @author jvanek
  */
-public class Cycle implements Substituable {
+public class Cycle implements Substituable, Statisticable {
 
     private final String id;
     private final String name;
@@ -35,9 +38,10 @@ public class Cycle implements Substituable {
     private final List<LocalisedString> localisedDescriptions;
     private final List<String> images;
     private final List<TrainingOverrides> trainings;
-    
+
     private int trainingPointer = 1;
-    private List<Record> statistics = new ArrayList<Record>();
+    private final List<Record> statistics = new NonRepeatedArrayList<Record>();
+    private boolean load = false;
 
     private Cycle(String id, String name, String des, List<LocalisedString> localisedNames, List<LocalisedString> localisedDescriptions, List<String> images, List<TrainingOverrides> trainings) {
         if (id == null) {
@@ -91,6 +95,7 @@ public class Cycle implements Substituable {
         return id;
     }
 
+    @Override
     public String getName() {
         String s = LocalisedString.findLocalised(localisedNames);
         if (s != null) {
@@ -133,7 +138,11 @@ public class Cycle implements Substituable {
         return Collections.unmodifiableList(trainings);
     }
 
-    public Training getTraining(int which) {
+    public Training getTraining() {
+        return getTraining(getTrainingPointer() - 1);
+    }
+
+    private Training getTraining(int which) {
         return trainings.get(which).getTraining();
     }
 
@@ -193,9 +202,33 @@ public class Cycle implements Substituable {
             breakLine(html, sb);
         }
         int i = 0;
+        if (html) {
+            sb.append("<h3>");
+        }
+        sb.append(R("overview"));
+        sb.append("\n");
+        if (html) {
+            sb.append("</h3>");
+        }
+        if (html) {
+            sb.append("<blockquote>");
+        }
         for (TrainingOverrides t : getTrainingOverrides()) {
             i++;
             sb.append(t.getHeader(i, html));
+        }
+        if (html) {
+            sb.append("</blockquote>");
+        }
+        if (html) {
+            sb.append("<h3>");
+        }
+        sb.append("\n");
+        sb.append("\n");
+        sb.append(R("details"));
+        sb.append("\n");
+        if (html) {
+            sb.append("</h3>");
         }
         i = 0;
         for (TrainingOverrides t : getTrainingOverrides()) {
@@ -281,45 +314,141 @@ public class Cycle implements Substituable {
         }
         sb.append("\n");
     }
-    
-    private static File getStatsFile(){
-        File f =  new File(Model.getModel().getStatsDir(), "cycles");
-        if (!f.exists()){
-            f.mkdirs();
-        }
-        return f;
-    }
-    
-     private File getFile(){
-        return new File(getStatsFile(), getId());
+
+
+    @Override
+    public File getFile() {
+        return new File(Cycles.getStatsDir(), getId());
     }
 
     public void load() {
-        try{
-            loadUncought();
-        }catch(Exception ex){
+        try {
+            IoUtils.loadStatisticable(this);
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    public void loadUncought() throws IOException {
-        File f = getFile();
-          if (f.exists()) {
-                BufferedReader fr = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
-                String counter = fr.readLine();
-                if (counter == null){
-                    return;
-                }
-                trainingPointer= Integer.valueOf(counter.trim());
-                statistics.clear();
-                while (true) {
-                    String s = fr.readLine();
-                    if (s == null) {
-                        break;
-                    }
-                    statistics.add(Record.fromString(s));
-                }
+
+    @Override
+    public void load(BufferedReader fr) throws IOException {
+        if (load) {
+            return;
+        }
+        load = true;
+        String counter = fr.readLine();
+        if (counter == null) {
+            return;
+        }
+        trainingPointer = Integer.valueOf(counter.trim());
+        statistics.clear();
+        while (true) {
+            String s = fr.readLine();
+            if (s == null) {
+                break;
             }
-        
+            if (s.trim().isEmpty()){
+                continue;
+                        
+            }
+            statistics.add(Record.fromString(s));
+        }
+
     }
 
+    public void save() {
+        try {
+            IoUtils.saveStatisticable(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void save(BufferedWriter fr) throws IOException {
+        fr.write(String.valueOf(trainingPointer));
+        fr.newLine();
+        for (Record r : statistics) {
+            fr.write(r.toString());
+            fr.newLine();
+
+        }
+
+    }
+
+    /**
+     * Pointer is 1-size (not 0-(size-1)).
+     *
+     * @return current training based on saved state
+     */
+    public int getTrainingPointer() {
+        load();
+        return trainingPointer;
+    }
+
+    public void incTrainingPointer() {
+        int i = getTrainingPointer();
+        i++;
+        if (i >= trainings.size()) {
+            i = trainings.size();
+        }
+        setTrainingPointer(i);
+
+    }
+
+    public void decTrainingPointer() {
+        int i = getTrainingPointer();
+        i--;
+        if (i < 1) {
+            i = 1;
+        }
+        setTrainingPointer(i);
+    }
+
+    private void setTrainingPointer(int i) {
+        trainingPointer = i;
+        save();
+    }
+
+    @Override
+    public List<Record> getRecords() {
+        load();
+        return Collections.unmodifiableList(statistics);
+    }
+
+   private Record  lastRecord;
+    @Override
+    public synchronized void addRecord(Record r) {
+        load();
+        if (lastRecord == null) {
+            statistics.add(r);
+            save();
+        } else {
+            Record q = lastRecord;
+            if (Math.abs(q.compareTo(r)) > Record.minTime ||q.getWhat()!=r.getWhat()) {//somebody clicking to fast?
+                statistics.add(r);
+                save();
+            }
+        }
+        lastRecord = r;
+
+    }
+
+    public void startCyclesTraining() {
+        int i = getTrainingPointer();
+        if (getTrainingPointer() == 1) {
+            addRecord(Record.create(RecordType.STARTED));
+        } else if (getTrainingPointer() == getTrainingOverrides().size()) {
+            addRecord(Record.create(RecordType.FINISHED));
+        } else {
+            addRecord(Record.create(RecordType.CONTINUED));
+        }
+        incTrainingPointer();
+        if (i == getTrainingPointer()){
+            setTrainingPointer(1);
+        }
+    }
+
+    public void modified() {
+        addRecord(Record.create(RecordType.MODIFIED));
+    }
 }

@@ -1,15 +1,56 @@
 package org.fbb.balkna.model.utils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import org.fbb.balkna.model.Model;
+import org.fbb.balkna.model.Statisticable;
 
 /**
  *
  * @author jvanek
  */
 public class IoUtils {
-    
+
+    public static void saveStatisticable(Statisticable i) throws IOException {
+        if (!Model.getModel().isSaveStats()) {
+            return;
+        }
+        File f = i.getFile();
+        BufferedWriter fr = null;
+        try {
+            fr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), "utf-8"));
+            i.save(fr);
+        } finally {
+            if (fr != null) {
+                fr.close();
+            }
+        }
+    }
+
+    public static void loadStatisticable(Statisticable i) throws IOException {
+        File f = i.getFile();
+        if (f.exists()) {
+            BufferedReader fr = null;
+            try {
+                fr = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+                i.load(fr);
+            } finally {
+                if (fr != null) {
+                    fr.close();
+                }
+            }
+        }
+    }
+
     public static URL getFile(String subPackage, String fileName) {
         String res = subPackage + ".";
         res = "/" + res.replace(".", "/") + fileName;
@@ -20,7 +61,6 @@ public class IoUtils {
         }
         //plugins
         return JavaPluginProvider.getPluginPaths().findFile(res);
-        
 
     }
 

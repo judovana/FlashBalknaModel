@@ -1,5 +1,7 @@
 package org.fbb.balkna.model.primitives;
 
+import org.fbb.balkna.model.Substituable;
+import java.io.BufferedReader;
 import org.fbb.balkna.model.ImagesSaver;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,8 +15,13 @@ import java.util.Collections;
 import java.util.List;
 import static org.fbb.balkna.model.Translator.R;
 import org.fbb.balkna.model.Model;
+import org.fbb.balkna.model.Statisticable;
 import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.merged.MergedExerciseWrapper;
+import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
+import org.fbb.balkna.model.primitives.history.Record;
+import org.fbb.balkna.model.primitives.history.RecordType;
+import org.fbb.balkna.model.utils.IoUtils;
 import org.fbb.balkna.model.utils.TimeUtils;
 import org.fbb.balkna.model.utils.XmlUtils;
 import org.w3c.dom.Node;
@@ -25,7 +32,7 @@ import org.w3c.dom.Element;
  *
  * @author jvanek
  */
-public class Training implements Substituable {
+public class Training implements Substituable, Statisticable {
 
     private final String id;
     private final String name;
@@ -35,23 +42,24 @@ public class Training implements Substituable {
     private final List<String> images;
     private final List<ExerciseOverrides> exerciseOverrides;
 
+    private final List<Record> statistics = new NonRepeatedArrayList<Record>();
+    private boolean load = false;
+
     public Training(Exercise ex) {
         this(ex.getId(), ex.getName(), ex.getDescription(), ex.getLocalisedNames(), ex.getLocalisedDescriptions(), new ArrayList<String>(), convert(ex));
     }
-    
-    
-      
-      public Training transform(TrainingOverrides override){
-          final List<ExerciseOverrides> nwOverride = new ArrayList<ExerciseOverrides>(exerciseOverrides.size());
-          for (ExerciseOverrides ow : exerciseOverrides) {
-              nwOverride.add(ow.transform(override));
-          }
-          return new Training(id, name, id, localisedNames, localisedDescriptions, images, nwOverride);
-      }
+
+    public Training transform(TrainingOverrides override) {
+        final List<ExerciseOverrides> nwOverride = new ArrayList<ExerciseOverrides>(exerciseOverrides.size());
+        for (ExerciseOverrides ow : exerciseOverrides) {
+            nwOverride.add(ow.transform(override));
+        }
+        return new Training(id, name, id, localisedNames, localisedDescriptions, images, nwOverride);
+    }
 
     static List<ExerciseOverrides> convert(Exercise ex) {
         ArrayList<ExerciseOverrides> l = new ArrayList<ExerciseOverrides>(1);
-        l.add(new ExerciseOverrides(ex.getTime(), ex.getPause(), ex.getIterations(),ex.getRest(), ex.getId()));
+        l.add(new ExerciseOverrides(ex.getTime(), ex.getPause(), ex.getIterations(), ex.getRest(), ex.getId()));
         return l;
     }
 
@@ -119,6 +127,7 @@ public class Training implements Substituable {
         return id;
     }
 
+    @Override
     public String getName() {
         String s = LocalisedString.findLocalised(localisedNames);
         if (s != null) {
@@ -294,6 +303,97 @@ public class Training implements Substituable {
             sb.append("<br>");
         }
         sb.append("\n");
+    }
+
+  
+    @Override
+    public File getFile() {
+        return new File(Trainings.getStatsDir(), getId());
+    }
+
+    public void load() {
+        try {
+            IoUtils.loadStatisticable(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void load(BufferedReader fr) throws IOException {
+        if (load) {
+            return;
+        }
+        load = true;
+        while (true) {
+            String s = fr.readLine();
+            if (s == null) {
+                break;
+            }
+            if (s.trim().isEmpty()){
+                continue;
+                        
+            }
+            statistics.add(Record.fromString(s));
+        }
+
+    }
+
+    public void save() {
+        try {
+            IoUtils.saveStatisticable(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void save(BufferedWriter fr) throws IOException {
+        for (Record r : statistics) {
+            fr.write(r.toString());
+            fr.newLine();
+
+        }
+
+    }
+
+    @Override
+    public List<Record> getRecords() {
+        load();
+        return Collections.unmodifiableList(statistics);
+    }
+
+    private Record  lastRecord;
+    @Override
+    public synchronized void addRecord(Record r) {
+        load();
+        if (lastRecord == null) {
+            statistics.add(r);
+            save();
+        } else {
+            Record q = lastRecord;
+            if (Math.abs(q.compareTo(r)) > Record.minTime ||q.getWhat()!=r.getWhat()) {//somebody clicking to fast?
+                statistics.add(r);
+                save();
+            }
+        }
+        lastRecord = r;
+
+    }
+
+    public void started() {
+        addRecord(Record.create(RecordType.STARTED));
+    }
+
+    public void finished() {
+        addRecord(Record.create(RecordType.FINISHED));
+    }
+    public void finishedWithSkips() {
+        addRecord(Record.create(RecordType.FINISHED_WITH_SKIPPS));
+    }
+    
+    public void canceled() {
+        addRecord(Record.create(RecordType.CANCELED));
     }
 
 }

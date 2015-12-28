@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,10 +23,10 @@ import org.fbb.balkna.model.primitives.Cycles;
 import org.fbb.balkna.model.primitives.Exercise;
 import org.fbb.balkna.model.primitives.ExerciseOverrides;
 import org.fbb.balkna.model.primitives.Exercises;
-import org.fbb.balkna.model.primitives.Substituable;
 import org.fbb.balkna.model.primitives.TimeShift;
 import org.fbb.balkna.model.primitives.Training;
 import org.fbb.balkna.model.primitives.Trainings;
+import org.fbb.balkna.model.primitives.history.RecordWithOrigin;
 import org.fbb.balkna.model.utils.JavaPluginProvider;
 import org.fbb.balkna.swing.locales.SwingTranslator;
 
@@ -337,4 +338,35 @@ public class Model {
         return pluginsDir;
     }
 
+    
+    private boolean saveStats=true;
+
+    public boolean isSaveStats() {
+        return saveStats;
+    }
+
+    public void setSaveStats(boolean saveStats) {
+        this.saveStats = saveStats;
+    }
+    
+    
+    public List<RecordWithOrigin> gatherStatistics(){
+        List<RecordWithOrigin>  cycles = Cycles.getInstance().gatherStatistics();
+        List<RecordWithOrigin>  exercise = Exercises.getInstance().gatherStatistics();
+        List<RecordWithOrigin>  trainings = Trainings.getInstance().gatherStatistics();
+        List<RecordWithOrigin>  exercisesLiketrainings = Trainings.getInstance().gatherFakeTrainingsStatistics();
+        List<RecordWithOrigin>  r = new ArrayList<RecordWithOrigin>(cycles.size() + exercise.size()+trainings.size()+exercisesLiketrainings.size());
+        r.addAll(cycles);
+        r.addAll(exercise);
+        r.addAll(trainings);
+        r.addAll(exercisesLiketrainings);
+        
+        Collections.sort(r);
+        Collections.reverse(r);
+        
+        return r;
+        
+    }
+    
+    
 }

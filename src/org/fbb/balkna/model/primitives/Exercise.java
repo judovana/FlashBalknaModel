@@ -1,9 +1,19 @@
 package org.fbb.balkna.model.primitives;
 
+import org.fbb.balkna.model.Substituable;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.fbb.balkna.model.Model;
+import org.fbb.balkna.model.Statisticable;
+import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
+import org.fbb.balkna.model.primitives.history.Record;
+import org.fbb.balkna.model.primitives.history.RecordType;
+import org.fbb.balkna.model.utils.IoUtils;
 import org.fbb.balkna.model.utils.XmlUtils;
 import static org.fbb.balkna.model.utils.XmlUtils.getRealChilds;
 import org.w3c.dom.Node;
@@ -14,7 +24,7 @@ import org.w3c.dom.Element;
  *
  * @author jvanek
  */
-public class Exercise implements Substituable {
+public class Exercise implements Substituable, Statisticable {
 
     private final String id;
     private final String name;
@@ -27,6 +37,9 @@ public class Exercise implements Substituable {
     private final Integer pause; //default time of pause in seconds
     private final Integer iterations; //defualt number of iterations
     private final Integer rest; //defualt time of rest after all iterations
+
+    private final List<Record> statistics = new NonRepeatedArrayList<Record>();
+    private boolean load = false;
 
     private Exercise(String id, String name, String des, Integer time, Integer pause, Integer iters, Integer rest, List<LocalisedString> localisedNames, List<LocalisedString> localisedDescriptions, List<String> images) {
         if (id == null) {
@@ -108,6 +121,7 @@ public class Exercise implements Substituable {
         return id;
     }
 
+    @Override
     public String getName() {
         String s = LocalisedString.findLocalised(localisedNames);
         if (s != null) {
@@ -164,11 +178,92 @@ public class Exercise implements Substituable {
     List<LocalisedString> getLocalisedDescriptions() {
         return localisedDescriptions;
     }
-    
-    
-    
-    
-    
 
-    
+
+    @Override
+    public File getFile() {
+        return new File(Exercises.getStatsDir(), getId());
+    }
+
+    public void load() {
+        try {
+            IoUtils.loadStatisticable(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void load(BufferedReader fr) throws IOException {
+        if (load) {
+            return;
+        }
+        load = true;
+        while (true) {
+            String s = fr.readLine();
+            if (s == null) {
+                break;
+            }
+            if (s.trim().isEmpty()){
+                continue;
+                        
+            }
+            statistics.add(Record.fromString(s));
+        }
+
+    }
+
+    public void save() {
+        try {
+            IoUtils.saveStatisticable(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void save(BufferedWriter fr) throws IOException {
+        for (Record r : statistics) {
+            fr.write(r.toString());
+            fr.newLine();
+
+        }
+
+    }
+
+    @Override
+    public List<Record> getRecords() {
+        load();
+        return Collections.unmodifiableList(statistics);
+    }
+
+   private Record  lastRecord;
+    @Override
+    public synchronized void addRecord(Record r) {
+        load();
+        if (lastRecord == null) {
+            statistics.add(r);
+            save();
+        } else {
+            Record q = lastRecord;
+            if (Math.abs(q.compareTo(r)) > Record.minTime && q.getWhat()!=r.getWhat()) {//somebody clicking to fast?
+                statistics.add(r);
+                save();
+            }
+        }
+        lastRecord = r;
+
+    }
+
+    public void finished() {
+        addRecord(Record.create(RecordType.FINISHED));
+    }
+    public void canceled() {
+        addRecord(Record.create(RecordType.CANCELED));
+    }
+
+    public void started() {
+        addRecord(Record.create(RecordType.STARTED));
+    }
+
 }
