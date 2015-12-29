@@ -132,7 +132,13 @@ public class TrainingOverrides {
                 + Translator.R("iterations", getIterations()) + breakLine(html)
                 + Translator.R("finalPause", (getRest())) + breakLine(html);
         if (restday){
+            if(html){
+                s+="<i>";
+            }
             s +=  " ** " + Translator.R("restDay") + " ** "+ breakLine(html);
+            if(html){
+                s+="</i>"+breakLine(html);
+            }
         }
         return s;
     }

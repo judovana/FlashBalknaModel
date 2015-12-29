@@ -150,9 +150,11 @@ public class JavaPluginProvider implements PluginFactoryProvider {
             URL result = null;
             if (l == null) {
                 List<String> ccache = new ArrayList<String>();
+                InputStream theFile = null;
+                ZipInputStream stream = null;
                 try {
-                    InputStream theFile = new FileInputStream(f);
-                    ZipInputStream stream = new ZipInputStream(theFile);
+                    theFile = new FileInputStream(f);
+                    stream = new ZipInputStream(theFile);
                     ZipEntry entry;
                     while ((entry = stream.getNextEntry()) != null) {
                         String zippath = "/" + entry.getName();
@@ -168,6 +170,14 @@ public class JavaPluginProvider implements PluginFactoryProvider {
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                } finally {
+                    if (stream != null) {
+                        try {
+                            stream.close();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
                 }
                 searchCache.put(f, ccache);
                 return result;

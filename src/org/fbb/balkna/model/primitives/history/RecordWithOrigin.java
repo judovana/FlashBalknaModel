@@ -17,8 +17,30 @@ import org.fbb.balkna.swing.locales.SwingTranslator;
  */
 public class RecordWithOrigin implements Comparable<RecordWithOrigin> {
 
+    public static RecordWithOrigin NOW() {
+        return new RecordWithOrigin(new Substituable() {
+
+            @Override
+            public String getId() {
+                return null;
+            }
+
+            @Override
+            public String getName() {
+                return "* *";
+            }
+        }, Record.create(RecordType.NOW)) {
+            @Override
+            public String toString() {
+                return this.getRecord().toNiceString();
+            }
+        };
+    }
+
     private final Substituable origin;
     private final Record record;
+    
+    public static boolean SHOW_CLASS=true;
 
     public RecordWithOrigin(Substituable origin, Record record) {
         this.origin = origin;
@@ -40,7 +62,7 @@ public class RecordWithOrigin implements Comparable<RecordWithOrigin> {
 
     @Override
     public String toString() {
-        return record.toNiceString() + " - " + origin.getName() + " (" + classToString() + ")";
+        return record.toNiceString() + " - " + origin.getName() + addClass();
     }
 
     private String classToString() {
@@ -53,6 +75,13 @@ public class RecordWithOrigin implements Comparable<RecordWithOrigin> {
         } else {
             return "?";
         }
+    }
+
+    private String addClass() {
+        if (!SHOW_CLASS){
+            return "";
+        }
+        return " (" + classToString() + ")";
     }
 
 }

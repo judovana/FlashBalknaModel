@@ -247,20 +247,6 @@ public class Cycle implements Substituable, Statisticable {
             String s = t.getTraining().getStoryPart(html);
             sb.append(s);
         }
-//        MergedExerciseWrapper m = getMergedExercises(Model.getModel().getTimeShift());
-//        sb.append(R("TotalTime", TimeUtils.secondsToHours(m.getTime())));
-//        breakLine(html, sb);
-//        sb.append(R("TotalTimeExercise", TimeUtils.secondsToHours(m.getActiveTime())));
-//        breakLine(html, sb);
-//        sb.append(R("TotalTimeResting", TimeUtils.secondsToHours(m.getRestTime())));
-//        breakLine(html, sb);
-//        sb.append(R("TotalExercises", m.getIterations()));
-//        breakLine(html, sb);
-//        sb.append(R("TotalDifferentExercises", m.getSize()));
-//        breakLine(html, sb);
-//        sb.append("----");
-//        breakLine(html, sb);
-//        sb.append(m.getStory(html));
         if (html) {
             sb.append("</body></html>");
         }
@@ -276,7 +262,7 @@ public class Cycle implements Substituable, Statisticable {
 //        return new MergedExerciseWrapper(r);
 //    }
     public File export(File root, ImagesSaver im) throws FileNotFoundException, IOException {
-        String dir = "exported.html";
+        String dir = "cycle-" + getId() + ".html";
         String index1 = "index.html";
         String index2 = "index.txt";
         File mainDir = new File(root, dir);
@@ -302,9 +288,13 @@ public class Cycle implements Substituable, Statisticable {
             bw2.close();
         }
         String[] ti = getImages();
-//        List<String> ei = getExerciseImages();
-//        im.writeExercisesImagesToDir(imgDir, ei);
         im.writeTrainingsImagesToDir(imgDir, Arrays.asList(ti));
+        for (TrainingOverrides t : getTrainingOverrides()) {
+            List<String> ei = t.getTraining().getExerciseImages();
+            im.writeExercisesImagesToDir(imgDir, ei);
+        }
+        ;
+
         return indexFile1;
     }
 
@@ -314,7 +304,6 @@ public class Cycle implements Substituable, Statisticable {
         }
         sb.append("\n");
     }
-
 
     @Override
     public File getFile() {
@@ -346,9 +335,9 @@ public class Cycle implements Substituable, Statisticable {
             if (s == null) {
                 break;
             }
-            if (s.trim().isEmpty()){
+            if (s.trim().isEmpty()) {
                 continue;
-                        
+
             }
             statistics.add(Record.fromString(s));
         }
@@ -415,7 +404,8 @@ public class Cycle implements Substituable, Statisticable {
         return Collections.unmodifiableList(statistics);
     }
 
-   private Record  lastRecord;
+    private Record lastRecord;
+
     @Override
     public synchronized void addRecord(Record r) {
         load();
@@ -424,7 +414,7 @@ public class Cycle implements Substituable, Statisticable {
             save();
         } else {
             Record q = lastRecord;
-            if (Math.abs(q.compareTo(r)) > Record.minTime ||q.getWhat()!=r.getWhat()) {//somebody clicking to fast?
+            if (Math.abs(q.compareTo(r)) > Record.minTime || q.getWhat() != r.getWhat()) {//somebody clicking to fast?
                 statistics.add(r);
                 save();
             }
@@ -443,7 +433,7 @@ public class Cycle implements Substituable, Statisticable {
             addRecord(Record.create(RecordType.CONTINUED));
         }
         incTrainingPointer();
-        if (i == getTrainingPointer()){
+        if (i == getTrainingPointer()) {
             setTrainingPointer(1);
         }
     }

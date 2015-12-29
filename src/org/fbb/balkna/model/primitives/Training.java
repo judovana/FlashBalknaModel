@@ -266,7 +266,7 @@ public class Training implements Substituable, Statisticable {
     public static final String IMGS_SUBDIR = "images";
 
     public File export(File root, ImagesSaver im) throws FileNotFoundException, IOException {
-        String dir = "exported.html";
+        String dir = "training-"+getId()+".html";
         String index1 = "index.html";
         String index2 = "index.txt";
         File mainDir = new File(root, dir);

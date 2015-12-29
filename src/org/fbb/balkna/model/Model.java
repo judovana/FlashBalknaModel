@@ -79,8 +79,6 @@ public class Model {
     public File getStatsDir() {
         return statsDir;
     }
-    
-    
 
     private Model(File settingsDir, WavPlayerProvider wavProvider, PluginFactoryProvider lpfp) {
         this.settingsDir = settingsDir;
@@ -192,8 +190,8 @@ public class Model {
         List<Training> l = Trainings.getInstance().getTrainings();
         return l;
     }
-    
-       public List<Cycle> getCycles() {
+
+    public List<Cycle> getCycles() {
         List<Cycle> l = Cycles.getInstance().getCycles();
         return l;
     }
@@ -338,8 +336,7 @@ public class Model {
         return pluginsDir;
     }
 
-    
-    private boolean saveStats=true;
+    private boolean saveStats = true;
 
     public boolean isSaveStats() {
         return saveStats;
@@ -348,25 +345,47 @@ public class Model {
     public void setSaveStats(boolean saveStats) {
         this.saveStats = saveStats;
     }
-    
-    
-    public List<RecordWithOrigin> gatherStatistics(){
-        List<RecordWithOrigin>  cycles = Cycles.getInstance().gatherStatistics();
-        List<RecordWithOrigin>  exercise = Exercises.getInstance().gatherStatistics();
-        List<RecordWithOrigin>  trainings = Trainings.getInstance().gatherStatistics();
-        List<RecordWithOrigin>  exercisesLiketrainings = Trainings.getInstance().gatherFakeTrainingsStatistics();
-        List<RecordWithOrigin>  r = new ArrayList<RecordWithOrigin>(cycles.size() + exercise.size()+trainings.size()+exercisesLiketrainings.size());
+
+    public List<RecordWithOrigin> gatherStatistics() {
+        return gatherStatistics(false, true, true);
+    }
+
+    public List<RecordWithOrigin> gatherStatistics(boolean ex, boolean tr, boolean cy) {
+        List<RecordWithOrigin> cycles = new ArrayList<RecordWithOrigin>(0);
+        if (cy) {
+            cycles = Cycles.getInstance().gatherStatistics();
+        }
+        List<RecordWithOrigin> exercise = new ArrayList<RecordWithOrigin>(0);
+        if (ex) {
+            exercise = Exercises.getInstance().gatherStatistics();
+        }
+
+        List<RecordWithOrigin> trainings = new ArrayList<RecordWithOrigin>(0);
+        List<RecordWithOrigin> exercisesLiketrainings = new ArrayList<RecordWithOrigin>(0);
+        if (tr) {
+            trainings = Trainings.getInstance().gatherStatistics();
+            exercisesLiketrainings = Trainings.getInstance().gatherFakeTrainingsStatistics();
+        }
+
+        List<RecordWithOrigin> r = new ArrayList<RecordWithOrigin>(cycles.size() + exercise.size() + trainings.size() + exercisesLiketrainings.size() + 1);
         r.addAll(cycles);
         r.addAll(exercise);
         r.addAll(trainings);
         r.addAll(exercisesLiketrainings);
-        
+        r.add(RecordWithOrigin.NOW());
+
         Collections.sort(r);
         Collections.reverse(r);
-        
+
+        if ((ex && !tr && !cy)
+                || (!ex && tr && !cy)
+                || (!ex && !tr && cy)) {
+            RecordWithOrigin.SHOW_CLASS = false;
+        } else {
+            RecordWithOrigin.SHOW_CLASS = true;
+        }
         return r;
-        
+
     }
-    
-    
+
 }
