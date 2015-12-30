@@ -1,9 +1,12 @@
 package org.fbb.balkna.model.merged.uncompressed;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.fbb.balkna.model.Translator;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BasicTime;
+import org.fbb.balkna.model.merged.uncompressed.timeUnits.BigRestTime;
+import org.fbb.balkna.model.merged.uncompressed.timeUnits.PausaTime;
 import org.fbb.balkna.sun.Timeable;
 import org.fbb.balkna.sun.Timer;
 
@@ -31,7 +34,11 @@ public class MainTimer implements Timeable {
     }
 
     public BasicTime getCurrent() {
-        return src.get(index);
+        return get(index);
+    }
+
+    public BasicTime get(int i) {
+        return src.get(i);
     }
 
     public int getIndex() {
@@ -56,10 +63,8 @@ public class MainTimer implements Timeable {
     }
 
     public List<BasicTime> getSrc() {
-        return src;
+        return Collections.unmodifiableList(src);
     }
-
-  
 
     public void setExerciseShifted(Runnable r) {
         this.exerciseShiftedListener = r;
@@ -165,4 +170,141 @@ public class MainTimer implements Timeable {
         return Translator.R("Now");
     }
 
+    public boolean isHalfSerie() {
+        List<BasicTime> serie = header1();
+        if (serie == null) {
+            return false;
+        }
+        int indexInSerie = findNewPosition(serie);
+
+        return indexInSerie == serie.size() / 2;
+    }
+
+    public boolean isLastExercise() {
+        List<BasicTime> serie = header1();
+        if (serie == null) {
+            return false;
+        }
+        int indexInSerie = findNewPosition(serie);
+
+        return indexInSerie == serie.size() - 1;
+    }
+
+    public boolean isThreeQatsSerie() {
+        List<BasicTime> serie = header1();
+        if (serie == null) {
+            return false;
+        }
+        int indexInSerie = findNewPosition(serie);
+
+        return indexInSerie == (3 * serie.size()) / 4;
+    }
+
+    public boolean isHalfTraining() {
+        List<BasicTime> training = header2();
+        if (training == null) {
+            return false;
+        }
+        int indexInSerie = findNewPosition(training);
+
+        return indexInSerie == training.size() / 2;
+    }
+
+    public boolean isLastSerie() {
+        List<BasicTime> training = header2();
+        if (training == null) {
+            return false;
+        }
+        int indexInSerie = findNewPosition(training);
+
+        return indexInSerie == training.size() - 2;
+    }
+
+    public boolean isThreeQatsTraining() {
+        List<BasicTime> training = header2();
+        if (training == null) {
+            return false;
+        }
+        int indexInSerie = findNewPosition(training);
+
+        return indexInSerie == (3 * training.size()) / 4;
+    }
+
+    private List<BasicTime> getSerieFromPause() {
+        //should be asked form pausa, so caunting only pausas
+        List<BasicTime> serie = new ArrayList<BasicTime>();
+        int i = getIndex() + 1;
+        while (i < src.size() && (!(get(i) instanceof BigRestTime))) {
+            if (get(i) instanceof PausaTime) {
+                serie.add(get(i));
+            }
+            i++;
+        }
+        //0 warm up
+        //1 first iteration
+        i = getIndex();
+        while (i > 0 && (!(get(i) instanceof BigRestTime))) {
+            if (get(i) instanceof PausaTime) {
+                serie.add(0, get(i));
+            }
+            i--;
+        }
+        return serie;
+    }
+
+    private List<BasicTime> getTrainingFromRest() {
+        List<BasicTime> training = new ArrayList<BasicTime>();
+        for (BasicTime b : src) {
+            if (b instanceof BigRestTime) {
+                training.add(b);
+            }
+        }
+        return training;
+    }
+
+    private int findNewPosition(List<BasicTime> serie) {
+        BasicTime cur = getCurrent();
+        int indexInSerie = getIndex();
+        for (int j = 0; j < serie.size(); j++) {
+            BasicTime get = serie.get(j);
+            if (get == cur) {
+                indexInSerie = j;
+                break;
+            }
+
+        }
+        return indexInSerie;
+    }
+
+    private List<BasicTime> header1() {
+        //0 warm up
+        //1 first iteration
+        if (getIndex() == 0) {
+            return null;
+        }
+        if (getIndex() >= src.size() - 1) {
+            return null;
+        }
+        List<BasicTime> serie = getSerieFromPause();
+        if (serie.size() < 2) {
+            return null;
+        }
+        return serie;
+    }
+
+    private List<BasicTime> header2() {
+        //0 warm up
+        //1 first iteration
+        if (getIndex() == 0) {
+            return null;
+        }
+        if (getIndex() >= src.size() - 1) {
+            return null;
+        }
+        List<BasicTime> train = getTrainingFromRest();
+        if (train.size() < 2) {
+            return null;
+        }
+        return train;
+    }
 }

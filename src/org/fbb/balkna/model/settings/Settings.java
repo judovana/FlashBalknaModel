@@ -38,6 +38,7 @@ public class Settings {
     private final BoolSettingsRecord ratioForced = new BoolSettingsRecord(true, "ratioForced");
     private final BoolSettingsRecord invertScreenCompress = new BoolSettingsRecord(false, "invertScreenCompress");
     private final BoolSettingsRecord allowScreenChange = new BoolSettingsRecord(true, "allowScreenChange");
+    private final BoolSettingsRecord playLongTermSounds = new BoolSettingsRecord(true, "playLongTermSounds");
     private final IntSettingsRecord imagesOnTimerSpeed = new IntSettingsRecord(2, "imagesOnTimerSpeed");
     private final StringSettingsRecord forcedLanguage = new StringSettingsRecord(null, "forcedLanguage");
     private final StringSettingsRecord forcedSoundFont = new StringSettingsRecord(Packages.DEFAULT_SOUND_PACK, "forcedSoundFont");
@@ -66,7 +67,7 @@ public class Settings {
         laud, allowSkipping, pauseOnChange, pauseOnExercise, ratioForced, invertScreenCompress,
         allowScreenChange, imagesOnTimerSpeed, forcedLanguage, forcedSoundFont,
         trainingDelimiterSize, mainTimerSize, trainingDelimiterColor, selectedItemColor, mainTimerColor,
-        mainTimerPositionV, mainTimerPositionH, singleExerciseOverride
+        mainTimerPositionV, mainTimerPositionH, singleExerciseOverride, playLongTermSounds
     };
 
     
@@ -369,5 +370,14 @@ public static Settings getSettings() {
     
     public void setSingleExerciseOverride(String i) {
         singleExerciseOverride.setValue(i);
+    }
+    
+    public boolean isPlayLongTermSounds() {
+        return playLongTermSounds.getValue();
+    }
+
+    
+    public void setPlayLongTermSounds(boolean ratioForced) {
+        this.playLongTermSounds.setValue(ratioForced);
     }
 }

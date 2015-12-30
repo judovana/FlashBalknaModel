@@ -23,11 +23,17 @@ public class SoundProvider {
     private static final String threeQatsPause = "threeQatsPause";
     private static final String threeQuatsRun = "threeQats";
     private static final String endChange = "endChange";
+    private static final String halfSerie = "halfSerie";
+    private static final String halfTraining = "halfTraining";
+    private static final String lastExercise = "lastExercise";
+    private static final String lastSerie = "lastSerie";
+    private static final String threeQatsSerie = "threeQatsSerie";
+    private static final String threeQatsTraining = "threeQatsTraining";
+    private static final String trainingEnd = "trainingEnd";
 
-    
     //for testing
-    String[] all = {one, two, three, change, endPause, endRun, halfPause, halfRun, start, threeQatsPause, threeQuatsRun, endChange};
-    
+    String[] all = {one, two, three, change, endPause, endRun, halfPause, halfRun, start, threeQatsPause, threeQuatsRun, endChange, halfSerie, halfTraining, lastExercise, lastSerie, threeQatsSerie, threeQatsTraining, trainingEnd};
+
     private static final String suffix = ".wav";
 
     private WavPlayer PSone;
@@ -42,6 +48,15 @@ public class SoundProvider {
     private WavPlayer PSthreeQatsPause;
     private WavPlayer PSthreeQuatsRun;
     private WavPlayer PSendChange;
+
+    private WavPlayer PShalfSerie;
+    private WavPlayer PShalfTraining;
+    private WavPlayer PSlastExercise;
+    private WavPlayer PSlastSerie;
+    private WavPlayer PSthreeQatsSerie;
+    private WavPlayer PSthreeQatsTraining;
+    private WavPlayer PStrainingEnd;
+
     private String usedSoundPack;
     private final WavPlayerProvider provider;
 
@@ -60,10 +75,17 @@ public class SoundProvider {
         PSthreeQatsPause = provider.createPlayer(getUrl(soundPack, threeQatsPause));
         PSthreeQuatsRun = provider.createPlayer(getUrl(soundPack, threeQuatsRun));
         PSendChange = provider.createPlayer(getUrl(soundPack, endChange));
+        PShalfSerie = provider.createPlayer(getUrl(soundPack, halfSerie));
+        PShalfTraining = provider.createPlayer(getUrl(soundPack, halfTraining));
+        PSlastExercise = provider.createPlayer(getUrl(soundPack, lastExercise));
+        PSlastSerie = provider.createPlayer(getUrl(soundPack, lastSerie));
+        PSthreeQatsSerie = provider.createPlayer(getUrl(soundPack, threeQatsSerie));
+        PSthreeQatsTraining = provider.createPlayer(getUrl(soundPack, threeQatsTraining));
+        PStrainingEnd = provider.createPlayer(getUrl(soundPack, trainingEnd));
     }
 
     private URL getUrl(String soundPack, String f) {
-        return IoUtils.getFile(soundPack, f+suffix);
+        return IoUtils.getFile(soundPack, f + suffix);
     }
 
     /**
@@ -145,12 +167,62 @@ public class SoundProvider {
     }
 
     public void test(String name) {
-         String soundPack = getPackage(name);
-        WavPlayer test = provider.createPlayer(getUrl(soundPack, all[new Random().nextInt(all.length)]));    
+        String soundPack = getPackage(name);
+        WavPlayer test = provider.createPlayer(getUrl(soundPack, all[new Random().nextInt(all.length)]));
         test.playAsync();
     }
+
     public void test() {
         test(getUsedSoundPack());
+    }
+
+    /**
+     * @return the PShalfSerie
+     */
+    public WavPlayer getPShalfSerie() {
+        return PShalfSerie;
+    }
+
+    /**
+     * @return the PShalfTraining
+     */
+    public WavPlayer getPShalfTraining() {
+        return PShalfTraining;
+    }
+
+    /**
+     * @return the PSlastExercise
+     */
+    public WavPlayer getPSlastExercise() {
+        return PSlastExercise;
+    }
+
+    /**
+     * @return the PSlastSerie
+     */
+    public WavPlayer getPSlastSerie() {
+        return PSlastSerie;
+    }
+
+    /**
+     * @return the PSthreeQatsSerie
+     */
+    public WavPlayer getPSthreeQatsSerie() {
+        return PSthreeQatsSerie;
+    }
+
+    /**
+     * @return the PSthreeQatsTraining
+     */
+    public WavPlayer getPSthreeQatsTraining() {
+        return PSthreeQatsTraining;
+    }
+
+    /**
+     * @return the PStrainingEnd
+     */
+    public WavPlayer getPStrainingEnd() {
+        return PStrainingEnd;
     }
 
     private static class SoundProviderHolder {
@@ -163,12 +235,12 @@ public class SoundProvider {
             }
             return instance;
         }
-        
-         public static void createInstance(WavPlayerProvider wpp) {
+
+        public static void createInstance(WavPlayerProvider wpp) {
             if (instance != null) {
                 throw new RuntimeException("SondProvider already initialised");
             } else {
-            instance = new SoundProvider(wpp);
+                instance = new SoundProvider(wpp);
             }
         }
     }
@@ -176,7 +248,7 @@ public class SoundProvider {
     public static SoundProvider getInstance() {
         return SoundProviderHolder.getInstance();
     }
-    
+
     static void createInstance(WavPlayerProvider javaxWawPlayerProvider) {
         SoundProviderHolder.createInstance(javaxWawPlayerProvider);
     }
@@ -187,17 +259,15 @@ public class SoundProvider {
     }
 
     public static String getDefaultSoundPack() {
-      return getPackage(Packages.DEFAULT_SOUND_PACK);
+        return getPackage(Packages.DEFAULT_SOUND_PACK);
     }
-     
+
     private static String getPackage(String name) {
-        return Packages.SOUND_PACK+"."+name;
+        return Packages.SOUND_PACK + "." + name;
     }
 
     public String getUsedSoundPack() {
         return usedSoundPack;
     }
-    
-    
 
 }

@@ -1,9 +1,12 @@
 package org.fbb.balkna.model.merged.uncompressed.timeUnits;
 
+import java.util.List;
 import org.fbb.balkna.model.Model;
 import org.fbb.balkna.model.SoundProvider;
 import org.fbb.balkna.model.Translator;
 import org.fbb.balkna.model.merged.MergedExercise;
+import org.fbb.balkna.model.merged.uncompressed.MainTimer;
+import org.fbb.balkna.model.settings.Settings;
 import org.fbb.balkna.model.utils.IoUtils;
 import org.fbb.balkna.model.utils.TimeUtils;
 
@@ -48,8 +51,8 @@ public abstract class BasicTime {
         }
         sb.append("\n");
         sb.append(TimeUtils.secondsToMinutes(originalValue));
-        if (markup){
-        sb = IoUtils.htmlWrap(sb);
+        if (markup) {
+            sb = IoUtils.htmlWrap(sb);
         }
         return sb.toString();
     }
@@ -70,7 +73,7 @@ public abstract class BasicTime {
         currentValue--;
     }
 
-    public void soundLogicRuntime() {
+    public void soundLogicRuntime(MainTimer model) {
         BasicTime c = this;
         if (!Model.getModel().isLaud()) {
             return;
@@ -93,6 +96,29 @@ public abstract class BasicTime {
             } else {
                 SoundProvider.getInstance().getPSthreeQuatsRun().playAsync();
             }
+        } else if (c.getCurrentValue() == (3 * (c.getOriginalValue())) / 4) {
+            if (Settings.getSettings().isPlayLongTermSounds()) {
+                if (c instanceof PausaTime) {
+                    if (model.isLastExercise()) {
+                        SoundProvider.getInstance().getPSlastExercise().playAsync();
+                    } else if (model.isHalfSerie()) {
+                        SoundProvider.getInstance().getPShalfSerie().playAsync();
+                    } else if (model.isThreeQatsSerie()) {
+                        SoundProvider.getInstance().getPSthreeQatsSerie().playAsync();
+                    }
+                }
+                if (c instanceof BigRestTime) {
+                    if (model.isLastSerie()) {
+                        SoundProvider.getInstance().getPSlastSerie().playAsync();
+                    } else if (model.isHalfTraining()) {
+                        SoundProvider.getInstance().getPShalfTraining().playAsync();
+                    } else if (model.isThreeQatsTraining()) {
+                        SoundProvider.getInstance().getPSthreeQatsTraining().playAsync();
+                    }
+                }
+
+            }
+
         }
     }
 
