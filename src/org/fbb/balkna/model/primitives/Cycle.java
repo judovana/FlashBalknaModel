@@ -16,6 +16,7 @@ import java.util.List;
 import static org.fbb.balkna.model.Translator.R;
 import org.fbb.balkna.model.Model;
 import org.fbb.balkna.model.Statisticable;
+import org.fbb.balkna.model.Translator;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
 import org.fbb.balkna.model.primitives.history.Record;
 import org.fbb.balkna.model.primitives.history.RecordType;
@@ -246,6 +247,19 @@ public class Cycle implements Substituable, Statisticable {
             }
             String s = t.getTraining().getStoryPart(html);
             sb.append(s);
+
+            if (t.getRestday() != null) {
+                if (html) {
+                    sb.append("<i>");
+                }
+                sb.append(" ** ").append(Translator.R("restDay")).append(" ** ").append(t.getRestday().getDescription());
+                breakLine(html, sb);
+                if (html) {
+                    sb.append("</i>");
+                    breakLine(html, sb);
+                }
+            }
+
         }
         if (html) {
             sb.append("</body></html>");
@@ -433,7 +447,7 @@ public class Cycle implements Substituable, Statisticable {
             addRecord(Record.create(RecordType.CONTINUED));
         }
         incTrainingPointer();
-        if (i == getTrainingPointer()) {
+        if (i == getTrainingPointer()) {//no change => i++ would cross max, but incTraining did not
             setTrainingPointer(1);
         }
     }

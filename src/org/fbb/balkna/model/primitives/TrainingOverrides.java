@@ -1,5 +1,6 @@
 package org.fbb.balkna.model.primitives;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.fbb.balkna.model.Translator;
 import org.fbb.balkna.model.utils.TimeUtils;
@@ -8,6 +9,7 @@ import static org.fbb.balkna.model.utils.XmlConstants.ITERATIONS;
 import static org.fbb.balkna.model.utils.XmlConstants.PAUSE;
 import static org.fbb.balkna.model.utils.XmlConstants.REST;
 import static org.fbb.balkna.model.utils.XmlConstants.TIME;
+import org.fbb.balkna.model.utils.XmlUtils;
 import static org.fbb.balkna.model.utils.XmlUtils.getRealChilds;
 import org.w3c.dom.Element;
 
@@ -23,10 +25,10 @@ public class TrainingOverrides {
     private final Double pause; //time of pause multiplyer
     private final Double iterations; //number of iterations multiplyer
     private final Double rest; //time of rest after all iterations multiplyer
-    
-    private final boolean restday;
 
-    public TrainingOverrides(Double time, Double pause, Double iterations, Double rest, String targetId, boolean sb) {
+    private final Pause restday;
+
+    private TrainingOverrides(Double time, Double pause, Double iterations, Double rest, String targetId, Pause sb) {
         if (targetId == null) {
             throw new NullPointerException();
         }
@@ -44,14 +46,14 @@ public class TrainingOverrides {
         Double pause = null;
         Double iterations = null;
         Double rest = null;
-        boolean restday = false;
+        Pause restday = null;
         //jdk6:(
         List<Element> idAndOverrides = getRealChilds(excercise);
         for (Element idOrOVerrides : idAndOverrides) {
             if (idOrOVerrides.getNodeName().equals(XmlConstants.ID)) {
                 targetId = idOrOVerrides.getTextContent();
             } else if (idOrOVerrides.getNodeName().equals(XmlConstants.SUGGESTBREAK)) {
-                restday = Boolean.valueOf(idOrOVerrides.getTextContent().trim());
+                restday = Pause.parse(idOrOVerrides);
             } else if (idOrOVerrides.getNodeName().equals(XmlConstants.CHANGES)) {
                 List<Element> l = getRealChilds(idOrOVerrides);
                 for (Element nn : l) {
@@ -114,6 +116,11 @@ public class TrainingOverrides {
         return targetId;
     }
 
+    public Pause getRestday() {
+        return restday;
+    }
+    
+
     @Override
     public String toString() {
         return getHeader(0, false);
@@ -131,13 +138,13 @@ public class TrainingOverrides {
                 + Translator.R("rest", (getPause())) + breakLine(html)
                 + Translator.R("iterations", getIterations()) + breakLine(html)
                 + Translator.R("finalPause", (getRest())) + breakLine(html);
-        if (restday){
-            if(html){
-                s+="<i>";
+        if (restday != null) {
+            if (html) {
+                s += "<i>";
             }
-            s +=  " ** " + Translator.R("restDay") + " ** "+ breakLine(html);
-            if(html){
-                s+="</i>"+breakLine(html);
+            s += " ** " + Translator.R("restDay") + " ** " + restday.getDescription() + breakLine(html);
+            if (html) {
+                s += "</i>" + breakLine(html);
             }
         }
         return s;
@@ -148,6 +155,42 @@ public class TrainingOverrides {
             return "<br>\n";
         }
         return "\n";
+    }
+
+    public static class Pause {
+
+        private final String description;
+        private final List<LocalisedString> localisedDescriptions;
+
+        public Pause(String description, List<LocalisedString> localisedDescriptions) {
+            this.description = description;
+            this.localisedDescriptions = localisedDescriptions;
+        }
+
+        private static Pause parse(Element node) {
+            String description = null;
+            List<LocalisedString> localisedDescriptions = new ArrayList<LocalisedString>();
+            List<Element> interlayer = XmlUtils.getRealChilds(node);
+            for (Element n : interlayer) {
+                if (n.getNodeName().equals(XmlConstants.DESCRIPTIONS)) {
+                    description = XmlUtils.getDefaultDescription(n);
+                    localisedDescriptions = XmlUtils.getLocalisedDescriptions(n);
+                }
+            }
+            return new Pause(description, localisedDescriptions);
+
+        }
+
+        public String getDescription() {
+            String s = LocalisedString.findLocalised(localisedDescriptions);
+            if (s != null) {
+                return s;
+            }
+            if (description == null) {
+                return "";
+            }
+            return description;
+        }
     }
 
 }

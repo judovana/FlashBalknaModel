@@ -21,6 +21,7 @@ import org.fbb.balkna.model.merged.MergedExerciseWrapper;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
 import org.fbb.balkna.model.primitives.history.Record;
 import org.fbb.balkna.model.primitives.history.RecordType;
+import org.fbb.balkna.model.settings.Settings;
 import org.fbb.balkna.model.utils.IoUtils;
 import org.fbb.balkna.model.utils.TimeUtils;
 import org.fbb.balkna.model.utils.XmlUtils;
@@ -59,7 +60,7 @@ public class Training implements Substituable, Statisticable {
 
     static List<ExerciseOverrides> convert(Exercise ex) {
         ArrayList<ExerciseOverrides> l = new ArrayList<ExerciseOverrides>(1);
-        l.add(new ExerciseOverrides(ex.getTime(), ex.getPause(), ex.getIterations(), ex.getRest(), ex.getId()));
+        l.add(ExerciseOverrides.fakeFromString(Settings.getSettings().getSingleExerciseOverride(), ex.getId()));
         return l;
     }
 

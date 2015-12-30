@@ -41,6 +41,7 @@ public class Settings {
     private final IntSettingsRecord imagesOnTimerSpeed = new IntSettingsRecord(2, "imagesOnTimerSpeed");
     private final StringSettingsRecord forcedLanguage = new StringSettingsRecord(null, "forcedLanguage");
     private final StringSettingsRecord forcedSoundFont = new StringSettingsRecord(Packages.DEFAULT_SOUND_PACK, "forcedSoundFont");
+    private final StringSettingsRecord singleExerciseOverride = new StringSettingsRecord("10 10 10 RR", "singleExerciseOverride");
 
     private final IntSettingsRecord trainingDelimiterSize = new IntSettingsRecord(15, "trainingDelimiterSize");
     private final IntSettingsRecord mainTimerSize = new IntSettingsRecord(0, "mainTimerSize");
@@ -65,7 +66,7 @@ public class Settings {
         laud, allowSkipping, pauseOnChange, pauseOnExercise, ratioForced, invertScreenCompress,
         allowScreenChange, imagesOnTimerSpeed, forcedLanguage, forcedSoundFont,
         trainingDelimiterSize, mainTimerSize, trainingDelimiterColor, selectedItemColor, mainTimerColor,
-        mainTimerPositionV, mainTimerPositionH
+        mainTimerPositionV, mainTimerPositionH, singleExerciseOverride
     };
 
     
@@ -359,5 +360,14 @@ public static Settings getSettings() {
 
     public void setMainTimerPositionH(String i) {
         mainTimerPositionH.setValue(i);
+    }
+    
+    
+     public String getSingleExerciseOverride() {
+        return singleExerciseOverride.getValue();
+    }
+    
+    public void setSingleExerciseOverride(String i) {
+        singleExerciseOverride.setValue(i);
     }
 }

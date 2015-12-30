@@ -1,6 +1,7 @@
 package org.fbb.balkna.model.primitives;
 
 import java.util.List;
+import org.fbb.balkna.model.utils.TimeUtils;
 import org.fbb.balkna.model.utils.XmlConstants;
 import static org.fbb.balkna.model.utils.XmlConstants.ITERATIONS;
 import static org.fbb.balkna.model.utils.XmlConstants.PAUSE;
@@ -59,8 +60,8 @@ public class ExerciseOverrides {
                 }
             }
         }
-        if (targetId == null){
-            System.err.println("no id for "+excercise.toString());
+        if (targetId == null) {
+            System.err.println("no id for " + excercise.toString());
         }
         return new ExerciseOverrides(time, pause, iterations, rest, targetId);
     }
@@ -92,24 +93,81 @@ public class ExerciseOverrides {
         Integer it = iterations;
         Integer r = rest;
         String id = targetId;
-        
-        if (t == null){
+
+        if (t == null) {
             t = src.getTime();
         }
-        if (p == null){
+        if (p == null) {
             p = src.getPause();
         }
-          if (it == null){
+        if (it == null) {
             it = src.getIterations();
         }
-          if (r == null){
+        if (r == null) {
             r = src.getRest();
         }
-        double tt = (double)t * override.getTime();
-        double pp = (double)p * override.getPause();
-        double iitt = (double)it * override.getIterations();
-        double rr = (double)r * override.getRest();
-        return new ExerciseOverrides((int)tt, (int)pp, (int)iitt, (int)rr, targetId);
+        double tt = (double) t * override.getTime();
+        double pp = (double) p * override.getPause();
+        double iitt = (double) it * override.getIterations();
+        double rr = (double) r * override.getRest();
+        return new ExerciseOverrides((int) tt, (int) pp, (int) iitt, (int) rr, targetId);
+    }
+
+    public static ExerciseOverrides fakeFromString(String s) {
+        return fakeFromString(s, "TmpPreview");
+    }
+
+    public static ExerciseOverrides fakeFromString(String s, String id) {
+        Integer time = null;
+        Integer pause = null;
+        Integer iterations = null;
+        Integer rest = null;
+        String[] ss = s.split("\\W+");
+        if (ss.length == 4) {
+            time = stringToIntSafe(ss[0]);
+            pause = stringToIntSafe(ss[1]);
+            iterations = stringToIntSafe(ss[2]);
+            rest = stringToIntSafe(ss[3]);
+        }
+        return new ExerciseOverrides(time, pause, iterations, rest, id);
+
+    }
+
+    private static Integer stringToIntSafe(String s) {
+        try {
+            return Integer.valueOf(s.trim());
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public String format() {
+        String s = "";
+        if (time != null) {
+            s += TimeUtils.secondsToMinutes(time);
+        } else {
+            s += " --";
+        }
+
+        if (pause != null) {
+            s += " " + TimeUtils.secondsToMinutes(pause);
+        } else {
+            s += " --";
+        }
+
+        if (iterations != null) {
+            s += " " + iterations + "x";
+        } else {
+            s += " --";
+        }
+
+        if (rest != null) {
+            s += " " + TimeUtils.secondsToMinutes(rest);
+        } else {
+            s += " --";
+        }
+
+        return s;
     }
 
 }
