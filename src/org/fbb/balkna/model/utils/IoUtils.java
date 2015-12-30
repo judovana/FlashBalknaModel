@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import org.fbb.balkna.model.Model;
+import org.fbb.balkna.model.PluginFactoryProvider;
 import org.fbb.balkna.model.Statisticable;
 
 /**
@@ -52,8 +53,7 @@ public class IoUtils {
     }
 
     public static URL getFile(String subPackage, String fileName) {
-        String res = subPackage + ".";
-        res = "/" + res.replace(".", "/") + fileName;
+        String res = toResource(subPackage, fileName);
         URL found = IoUtils.class.getResource(res);
         //regular classapth
         if (found != null) {
@@ -64,20 +64,39 @@ public class IoUtils {
 
     }
 
+    private static String toResource(String subPackage, String fileName) {
+        String res = subPackage + ".";
+        res = "/" + res.replace(".", "/") + fileName;
+        return res;
+    }
+
     public static List<URL> getFiles(String subPackage, String fileRoot, String suffix) {
+        List<URL> presearch = new ArrayList<URL>(0);
+        try {
+            presearch = PluginFactoryProvider.getInstance().searchResourceInPlugins(toResource(subPackage, fileRoot + ".*\\." + suffix));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         List<URL> l = new ArrayList<URL>();
-        int i = 0;
+        //presearch fopund everyting in plugins
+        //themian jar should have only *1 and *2, so try them
+        int i = -1;
         while (true) {
             i++;
-            URL in = getFile(subPackage, fileRoot + i + "." + suffix);
-            if (i >= 1000) {
+            if (i > 2) {
                 break;
             }
+            URL in = getFile(subPackage, fileRoot + i + "." + suffix);
             if (in == null) {
-                //break; try all 1000
+                //break; try all 2
                 continue;
             }
             l.add(in);
+        }
+        for (URL l1 : presearch) {
+            if (!l.contains(l1)){
+                l.add(l1);
+            }
         }
         return l;
 

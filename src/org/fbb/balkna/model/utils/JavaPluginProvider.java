@@ -7,8 +7,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.fbb.balkna.model.Model;
@@ -18,7 +20,7 @@ import org.fbb.balkna.model.PluginFactoryProvider;
  *
  * @author jvanek
  */
-public class JavaPluginProvider implements PluginFactoryProvider {
+public class JavaPluginProvider extends PluginFactoryProvider {
 
     private static void clearCache() {
         PluginsPaths.searchCache1.clear();
@@ -36,6 +38,16 @@ public class JavaPluginProvider implements PluginFactoryProvider {
                 instance = new PluginsPaths();
             }
             return instance;
+        }
+
+        private static List<String> mapMathces(List<String> l, String res) {
+            List<String> r = new ArrayList<String>();
+            for (String s : l) {
+                if (s.matches(res)){
+                    r.add(s);
+                }
+            }
+            return r;
         }
 
         private final List<File> paths = new ArrayList<File>();
@@ -193,6 +205,89 @@ public class JavaPluginProvider implements PluginFactoryProvider {
             }
         }
 
+        private List<URL> findFiles(String regex) {
+            List<URL> r = new ArrayList<URL>();
+            //search for full path
+            searchInZips(regex, searchCache1, r);
+            //desperate attempt to find in wrongly packed plugins            
+            String res = regex.substring(regex.lastIndexOf("/"), regex.length());
+            //remove path
+            searchInZips(res, searchCache2, r);
+            return r;
+
+        }
+
+        private List<URL> searchInZips(String res, Map<File, List<String>> searchCache, List<URL> result) {
+            List<File> l = Collections.unmodifiableList(JavaPluginProvider.getPluginPaths().paths);
+            return searchInZips(l, res, searchCache, result);
+        }
+
+        private static List<URL> searchInZips(List<File> l, String res, Map<File, List<String>> searchCache, List<URL> results) {
+            for (File f : l) {
+                if (f != null && f.exists()) {
+                    List<URL> r = searchInFile(res, f, searchCache, results);
+                    results.addAll(r);
+                }
+            }
+            return results;
+        }
+
+        private static List<URL> searchInFile(String res, File f, Map<File, List<String>> searchCache, List<URL> result) {
+            List<String> l = searchCache.get(f);
+            if (l == null) {
+                List<String> ccache = new ArrayList<String>();
+                InputStream theFile = null;
+                ZipInputStream stream = null;
+                try {
+                    theFile = new FileInputStream(f);
+                    stream = new ZipInputStream(theFile);
+                    ZipEntry entry;
+                    while ((entry = stream.getNextEntry()) != null) {
+                        String zippath = "/" + entry.getName();
+                        ccache.add(zippath);
+                        if (zippath.matches(res)) {
+                            //eg                            
+//jar:file:/home/jvanek/git/FlashBalknaModel/dist/FlashBalknaModel.jar!/org/fbb/balkna/data/imgs/app/title1.png
+                            result.add(new URL("jar:file:" + f.getAbsolutePath() + "!" + zippath));
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    if (stream != null) {
+                        try {
+                            stream.close();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+                searchCache.put(f, ccache);
+                return result;
+            } else {
+                List<String> cachedMatches = mapMathces(l, res);
+                for (String cachedMatche : cachedMatches) {
+                    try {
+                        result.add(new URL("jar:file:" + f.getAbsolutePath() + "!" + cachedMatche));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                return result;
+            }
+        }
+    }
+
+    @Override
+    public List<URL> searchResourceInPlugins(String regex) throws Exception {
+        List<URL> r = getPluginPaths().findFiles(regex);
+        Set<URL> s = new HashSet<URL>(r.size());
+        for (URL u : r) {
+            s.add(u);
+        }
+        r.clear();
+        r.addAll(s);
+        return r;
     }
 
     public static PluginsPaths getPluginPaths() {
@@ -205,5 +300,4 @@ public class JavaPluginProvider implements PluginFactoryProvider {
         getPluginPaths().addPath(u.getFile());
 
     }
-
 }

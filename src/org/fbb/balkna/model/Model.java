@@ -36,7 +36,6 @@ import org.fbb.balkna.swing.locales.SwingTranslator;
  */
 public class Model {
 
-    private final PluginFactoryProvider pfp;
 
     public static void substitute(List<String> images, Substituable a) {
         for (int i = 0; i < images.size(); i++) {
@@ -80,18 +79,17 @@ public class Model {
         return statsDir;
     }
 
-    private Model(File settingsDir, WavPlayerProvider wavProvider, PluginFactoryProvider lpfp) {
+    private Model(File settingsDir, WavPlayerProvider wavProvider) {
         this.settingsDir = settingsDir;
         this.pluginsDir = new File(settingsDir, "plugins");
         this.statsDir = new File(settingsDir, "stats");
-        this.pfp = lpfp;
         SoundProvider.createInstance(wavProvider);
         try {
             if (pluginsDir.exists()) {
                 File[] plugins = pluginsDir.listFiles();
                 for (File plugin : plugins) {
                     try {
-                        reloadForJar(false, pfp, plugin.toURI().toURL());
+                        reloadForJar(false, plugin.toURI().toURL());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -128,7 +126,7 @@ public class Model {
     }
 
     public void reload(boolean save, URL... u) throws MalformedURLException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException {
-        reloadForJar(save, pfp, u);
+        reloadForJar(save, u);
         reload();
     }
 //quick tester
@@ -136,24 +134,28 @@ public class Model {
 //        reloadForJar(false, new URL("file:///home/jvanek/Desktop/urlLoadingTest.jar"));
 //    }
 
-    private void reloadForJar(boolean save, PluginFactoryProvider pfp, URL... urls) throws IOException {
+    private void reloadForJar(boolean save, URL... urls) throws IOException {
 
         for (URL u : urls) {
             if (save) {
                 pluginsDir.mkdirs();
                 File savedAs = new File(pluginsDir, new File(u.getFile()).getName());
-                //right thing to do but... :-/
-//                ReadableByteChannel rbc = Channels.newChannel(u.openStream());
-//                FileOutputStream fos = new FileOutputStream(savedAs);
-//                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                saveUrl(u, savedAs);
+                if (savedAs.exists()) {
+                    File tmp = saveUrl(u);
+                    if (tmp.exists() && tmp.length() > 0) {
+                        JavaPluginProvider.getPluginPaths().removePath(savedAs);
+                        tmp.renameTo(savedAs);
+                    }
+                } else {
+                    saveUrl(u, savedAs);
+                }
                 u = savedAs.toURI().toURL();
             } else if (!u.getProtocol().toLowerCase().startsWith("file")) {
                 File savedAs = saveUrl(u);
                 u = savedAs.toURI().toURL();
             }
             try {
-                pfp.addResource(u);
+                PluginFactoryProvider.getInstance().addResource(u);
             } catch (Exception ex) {
                 throw new IOException(ex);
             }
@@ -173,7 +175,7 @@ public class Model {
     public static void saveUrl(URL u, File savedAs) throws IOException {
 
         URLConnection connection = u.openConnection();
-        InputStream inputStream = new BufferedInputStream(u.openStream(), 10240);
+        InputStream inputStream = new BufferedInputStream(u.openStream(), 1024);
         FileOutputStream outputStream = new FileOutputStream(savedAs);
 
         byte buffer[] = new byte[1024];
@@ -312,7 +314,7 @@ public class Model {
         }
 
         private static void createInstance(File f, WavPlayerProvider wpp) {
-            INSTANCE = new Model(f, wpp, new JavaPluginProvider());
+            INSTANCE = new Model(f, wpp);
         }
 
     }
