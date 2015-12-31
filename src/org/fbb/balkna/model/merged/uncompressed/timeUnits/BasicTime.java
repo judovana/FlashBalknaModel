@@ -124,4 +124,11 @@ public abstract class BasicTime {
 
     public abstract void play();
 
+    public static void payEnd() {
+        if (!Model.getModel().isLaud()) {
+            return;
+        }
+        SoundProvider.getInstance().getPStrainingEnd().playAsync();
+    }
+
 }
