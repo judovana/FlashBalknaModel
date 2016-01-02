@@ -85,7 +85,14 @@ public class SoundProvider {
     }
 
     private URL getUrl(String soundPack, String f) {
-        return IoUtils.getFile(soundPack, f + suffix);
+        URL u = IoUtils.getFile(soundPack, f + suffix);
+        if (u!=null){
+            return u;
+        }
+        //GOOD!
+        return IoUtils.getFile(getDefaultSoundPack(), f + suffix);
+        //testing:
+        //return IoUtils.getFile(getPackage("fbbhorror"), f + suffix);
     }
 
     /**
@@ -238,7 +245,7 @@ public class SoundProvider {
 
         public static void createInstance(WavPlayerProvider wpp) {
             if (instance != null) {
-                throw new RuntimeException("SondProvider already initialised");
+                System.err.println("SondProvider already initialised");
             } else {
                 instance = new SoundProvider(wpp);
             }
