@@ -85,7 +85,7 @@ public class JavaPluginProvider extends PluginFactoryProvider {
                 }
 
             }
-            s.delete();
+            deleteRecursively(s);
             clearCache();
             Model.getModel().reload();
         }
@@ -362,6 +362,20 @@ public class JavaPluginProvider extends PluginFactoryProvider {
                 }
                 return result;
             }
+        }
+
+        private boolean deleteRecursively(File s) {
+            if (!s.exists()) {
+                return true;
+            }
+            if (s.isDirectory()) {
+                File[] ss = s.listFiles();
+                for (File f : ss) {
+                    deleteRecursively(f);
+                }
+            }
+            return s.delete();
+
         }
     }
 
