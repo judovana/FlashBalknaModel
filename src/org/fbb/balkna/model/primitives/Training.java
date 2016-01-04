@@ -107,13 +107,22 @@ public class Training implements Substituable, Statisticable {
                     } else if (exerciseElement.getNodeName().equals(EXERCISES_SET)) {
                         int clone = 1;
                         String count = exerciseElement.getAttribute("count");
-                        if (count != null) {
+                        if (count != null && !count.trim().isEmpty()) {
                             clone = Integer.valueOf(count);
                         }
-                        List<Element> exerciseSetsElements = XmlUtils.getRealChilds(exerciseElement);
+                        ExerciseOverrides.Override o = new ExerciseOverrides.Override();
+                        List<Element> exerciseSetsElementsAndOverride = XmlUtils.getRealChilds(exerciseElement);
+                        List<Element> exerciseSetsElements = new ArrayList<Element>(exerciseSetsElementsAndOverride.size());
+                        for (Element setExerciseOrOverride : exerciseSetsElementsAndOverride) {
+                            if (setExerciseOrOverride.getNodeName().equals(OVERRIDES)) {
+                                o = ExerciseOverrides.Override.read(setExerciseOrOverride);
+                            } else {
+                                exerciseSetsElements.add(setExerciseOrOverride);
+                            }
+                        }
                         for (int x = 0; x < clone; x++) {
                             for (Element setExercise : exerciseSetsElements) {
-                                exerciseOverrides.add(ExerciseOverrides.parse(setExercise));
+                                exerciseOverrides.add(ExerciseOverrides.parse(setExercise, o));
                             }
                         }
                     }
@@ -267,7 +276,7 @@ public class Training implements Substituable, Statisticable {
     public static final String IMGS_SUBDIR = "images";
 
     public File export(File root, ImagesSaver im) throws FileNotFoundException, IOException {
-        String dir = "training-"+getId()+".html";
+        String dir = "training-" + getId() + ".html";
         String index1 = "index.html";
         String index2 = "index.txt";
         File mainDir = new File(root, dir);
@@ -306,7 +315,6 @@ public class Training implements Substituable, Statisticable {
         sb.append("\n");
     }
 
-  
     @Override
     public File getFile() {
         return new File(Trainings.getStatsDir(), getId());
@@ -331,9 +339,9 @@ public class Training implements Substituable, Statisticable {
             if (s == null) {
                 break;
             }
-            if (s.trim().isEmpty()){
+            if (s.trim().isEmpty()) {
                 continue;
-                        
+
             }
             statistics.add(Record.fromString(s));
         }
@@ -364,7 +372,8 @@ public class Training implements Substituable, Statisticable {
         return Collections.unmodifiableList(statistics);
     }
 
-    private Record  lastRecord;
+    private Record lastRecord;
+
     @Override
     public synchronized void addRecord(Record r) {
         load();
@@ -373,7 +382,7 @@ public class Training implements Substituable, Statisticable {
             save();
         } else {
             Record q = lastRecord;
-            if (Math.abs(q.compareTo(r)) > Record.minTime ||q.getWhat()!=r.getWhat()) {//somebody clicking to fast?
+            if (Math.abs(q.compareTo(r)) > Record.minTime || q.getWhat() != r.getWhat()) {//somebody clicking to fast?
                 statistics.add(r);
                 save();
             }
@@ -389,10 +398,11 @@ public class Training implements Substituable, Statisticable {
     public void finished() {
         addRecord(Record.create(RecordType.FINISHED));
     }
+
     public void finishedWithSkips() {
         addRecord(Record.create(RecordType.FINISHED_WITH_SKIPPS));
     }
-    
+
     public void canceled() {
         addRecord(Record.create(RecordType.CANCELED));
     }

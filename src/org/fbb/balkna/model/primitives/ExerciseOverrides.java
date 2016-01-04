@@ -34,36 +34,71 @@ public class ExerciseOverrides {
         this.targetId = targetId;
     }
 
-    static ExerciseOverrides parse(Element excercise) {
-        String targetId = null;
+    static class Override {
+
+        static Override read(Element idOrOVerrides) {
+            Override o = new Override();
+            List<Element> l = getRealChilds(idOrOVerrides);
+            for (Element nn : l) {
+                if (nn.getNodeName().equals(TIME)) {
+                    o.time = Integer.valueOf(nn.getTextContent());
+                } else if (nn.getNodeName().equals(PAUSE)) {
+                    o.pause = Integer.valueOf(nn.getTextContent());
+                } else if (nn.getNodeName().equals(ITERATIONS)) {
+                    o.iterations = Integer.valueOf(nn.getTextContent());
+                } else if (nn.getNodeName().equals(REST)) {
+                    o.rest = Integer.valueOf(nn.getTextContent());
+                }
+            }
+            return o;
+        }
+
         Integer time = null;
         Integer pause = null;
         Integer iterations = null;
         Integer rest = null;
+
+        public Override() {
+        }
+
+        private void copyApplicable(Override defaultOverride) {
+            if (time == null){
+                time = defaultOverride.time;
+            }
+            if (pause == null){
+                pause = defaultOverride.pause;
+            }
+            if (iterations == null){
+                iterations = defaultOverride.iterations;
+            }
+            if (rest == null){
+                rest = defaultOverride.rest;
+            }
+        }
+
+    }
+
+    static ExerciseOverrides parse(Element excercise) {
+        return parse(excercise, new Override());
+    }
+    static ExerciseOverrides parse(Element excercise, Override defaultOverride) {
+        String targetId = null;
+        Override o = new Override();
         //jdk6:(
         List<Element> idAndOverrides = getRealChilds(excercise);
         for (Element idOrOVerrides : idAndOverrides) {
             if (idOrOVerrides.getNodeName().equals(XmlConstants.ID)) {
                 targetId = idOrOVerrides.getTextContent();
             } else if (idOrOVerrides.getNodeName().equals(XmlConstants.OVERRIDES)) {
-                List<Element> l = getRealChilds(idOrOVerrides);
-                for (Element nn : l) {
-                    if (nn.getNodeName().equals(TIME)) {
-                        time = Integer.valueOf(nn.getTextContent());
-                    } else if (nn.getNodeName().equals(PAUSE)) {
-                        pause = Integer.valueOf(nn.getTextContent());
-                    } else if (nn.getNodeName().equals(ITERATIONS)) {
-                        iterations = Integer.valueOf(nn.getTextContent());
-                    } else if (nn.getNodeName().equals(REST)) {
-                        rest = Integer.valueOf(nn.getTextContent());
-                    }
-                }
+                o = Override.read(idOrOVerrides);
+
             }
         }
         if (targetId == null) {
             System.err.println("no id for " + excercise.toString());
         }
-        return new ExerciseOverrides(time, pause, iterations, rest, targetId);
+        o.copyApplicable(defaultOverride);
+        return new ExerciseOverrides(o.time, o.pause, o.iterations, o.rest, targetId);
     }
 
     public Integer getIterations() {
