@@ -391,20 +391,20 @@ public class Training implements Substituable, Statisticable {
 
     }
 
-    public void started() {
-        addRecord(Record.create(RecordType.STARTED));
+    public void finishedWithSkips(String message) {
+        addRecord(Record.create(RecordType.FINISHED_WITH_SKIPPS, message));
     }
 
-    public void finished() {
-        addRecord(Record.create(RecordType.FINISHED));
+    public void finished(String message) {
+        addRecord(Record.create(RecordType.FINISHED, message));
     }
 
-    public void finishedWithSkips() {
-        addRecord(Record.create(RecordType.FINISHED_WITH_SKIPPS));
+    public void canceled(String message) {
+        addRecord(Record.create(RecordType.CANCELED, message));
     }
 
-    public void canceled() {
-        addRecord(Record.create(RecordType.CANCELED));
+    public void started(String message) {
+        addRecord(Record.create(RecordType.STARTED, message));
     }
 
 }

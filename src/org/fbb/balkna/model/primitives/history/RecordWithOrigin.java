@@ -29,7 +29,7 @@ public class RecordWithOrigin implements Comparable<RecordWithOrigin> {
             public String getName() {
                 return "* *";
             }
-        }, Record.create(RecordType.NOW)) {
+        }, Record.create(RecordType.NOW, null)) {
             @Override
             public String toString() {
                 return this.getRecord().toNiceString();

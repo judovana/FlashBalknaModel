@@ -143,7 +143,7 @@ public class Cycle implements Substituable, Statisticable {
         return getTraining(getTrainingPointer() - 1);
     }
 
-    private Training getTraining(int which) {
+    public Training getTraining(int which) {
         return trainings.get(which).getTraining();
     }
 
@@ -440,11 +440,11 @@ public class Cycle implements Substituable, Statisticable {
     public void startCyclesTraining() {
         int i = getTrainingPointer();
         if (getTrainingPointer() == 1) {
-            addRecord(Record.create(RecordType.STARTED));
+            addRecord(Record.create(RecordType.STARTED, "training: " + i + " - " + getTraining().getName()));
         } else if (getTrainingPointer() == getTrainingOverrides().size()) {
-            addRecord(Record.create(RecordType.FINISHED));
+            addRecord(Record.create(RecordType.FINISHED, " at: " + i + " - " + getTraining().getName()));
         } else {
-            addRecord(Record.create(RecordType.CONTINUED));
+            addRecord(Record.create(RecordType.CONTINUED, " training: " + i + " - " + getTraining().getName()));
         }
         incTrainingPointer();
         if (i == getTrainingPointer()) {//no change => i++ would cross max, but incTraining did not
@@ -452,7 +452,7 @@ public class Cycle implements Substituable, Statisticable {
         }
     }
 
-    public void modified() {
-        addRecord(Record.create(RecordType.MODIFIED));
+    public void modified(String m) {
+        addRecord(Record.create(RecordType.MODIFIED, m));
     }
 }

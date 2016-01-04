@@ -1,5 +1,8 @@
 package org.fbb.balkna.model.utils;
 
+import org.fbb.balkna.model.merged.uncompressed.MainTimer;
+import org.fbb.balkna.model.merged.uncompressed.timeUnits.BasicTime;
+
 /**
  *
  * @author jvanek
@@ -29,6 +32,14 @@ public class TimeUtils {
             return "0" + s;
         }
         return s;
+    }
+
+    public  static String getRemainingTime(BasicTime c, MainTimer model) {
+        if (c != null) {
+            return TimeUtils.secondsToHours(c.getCurrentValue() + model.getFutureTime()) + "/" + TimeUtils.secondsToHours(model.getTotalTime());
+        } else {
+            return TimeUtils.secondsToHours(model.getFutureTime()) + "/" + TimeUtils.secondsToHours(model.getTotalTime());
+        }
     }
 
 }

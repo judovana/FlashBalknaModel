@@ -255,15 +255,15 @@ public class Exercise implements Substituable, Statisticable {
 
     }
 
-    public void finished() {
-        addRecord(Record.create(RecordType.FINISHED));
+    public void finished(String message) {
+        addRecord(Record.create(RecordType.FINISHED, message));
     }
-    public void canceled() {
-        addRecord(Record.create(RecordType.CANCELED));
+    public void canceled(String message) {
+        addRecord(Record.create(RecordType.CANCELED, message));
     }
 
-    public void started() {
-        addRecord(Record.create(RecordType.STARTED));
+    public void started(String message) {
+        addRecord(Record.create(RecordType.STARTED, message));
     }
 
 }
