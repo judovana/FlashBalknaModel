@@ -379,13 +379,9 @@ public class Model {
         Collections.sort(r);
         Collections.reverse(r);
 
-        if ((ex && !tr && !cy)
+        RecordWithOrigin.SHOW_CLASS = !((ex && !tr && !cy)
                 || (!ex && tr && !cy)
-                || (!ex && !tr && cy)) {
-            RecordWithOrigin.SHOW_CLASS = false;
-        } else {
-            RecordWithOrigin.SHOW_CLASS = true;
-        }
+                || (!ex && !tr && cy));
         return r;
 
     }

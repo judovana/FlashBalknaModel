@@ -1,11 +1,9 @@
 package org.fbb.balkna.model.primitives;
 
-import org.fbb.balkna.model.Substituable;
 import java.io.BufferedReader;
 import org.fbb.balkna.model.ImagesSaver;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -15,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import static org.fbb.balkna.model.Translator.R;
 import org.fbb.balkna.model.Model;
-import org.fbb.balkna.model.Statisticable;
+import org.fbb.balkna.model.Trainable;
 import org.fbb.balkna.model.Translator;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
 import org.fbb.balkna.model.primitives.history.Record;
@@ -30,7 +28,7 @@ import org.w3c.dom.Element;
  *
  * @author jvanek
  */
-public class Cycle implements Substituable, Statisticable {
+public class Cycle implements  Trainable {
 
     private final String id;
     private final String name;
@@ -126,6 +124,7 @@ public class Cycle implements Substituable, Statisticable {
         return getName();
     }
 
+    @Override
     public String[] getImages() {
         String[] r = new String[images.size()];
         for (int i = 0; i < images.size(); i++) {
@@ -139,6 +138,7 @@ public class Cycle implements Substituable, Statisticable {
         return Collections.unmodifiableList(trainings);
     }
 
+    @Override
     public Training getTraining() {
         return getTraining(getTrainingPointer() - 1);
     }
@@ -156,10 +156,12 @@ public class Cycle implements Substituable, Statisticable {
 //        }
 //        return r;
 //    }
+    @Override
     public String getStory() {
         return getStory(false);
     }
 
+    @Override
     public String getStory(boolean html) {
         StringBuilder sb = new StringBuilder();
         if (html) {
@@ -275,7 +277,8 @@ public class Cycle implements Substituable, Statisticable {
 //        }
 //        return new MergedExerciseWrapper(r);
 //    }
-    public File export(File root, ImagesSaver im) throws FileNotFoundException, IOException {
+    @Override
+    public File export(File root, ImagesSaver im) throws  IOException {
         String dir = "cycle-" + getId() + ".html";
         String index1 = "index.html";
         String index2 = "index.txt";
@@ -307,7 +310,6 @@ public class Cycle implements Substituable, Statisticable {
             List<String> ei = t.getTraining().getExerciseImages();
             im.writeExercisesImagesToDir(imgDir, ei);
         }
-        ;
 
         return indexFile1;
     }
@@ -383,6 +385,7 @@ public class Cycle implements Substituable, Statisticable {
      *
      * @return current training based on saved state
      */
+    @Override
     public int getTrainingPointer() {
         load();
         return trainingPointer;
@@ -454,5 +457,11 @@ public class Cycle implements Substituable, Statisticable {
 
     public void modified(String m) {
         addRecord(Record.create(RecordType.MODIFIED, m));
+    }
+
+    @Override
+    public List<String> getExerciseImages() {
+        //to much
+        return new ArrayList<String>(0);
     }
 }

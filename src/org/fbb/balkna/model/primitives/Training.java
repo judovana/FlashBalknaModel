@@ -1,11 +1,9 @@
 package org.fbb.balkna.model.primitives;
 
-import org.fbb.balkna.model.Substituable;
 import java.io.BufferedReader;
 import org.fbb.balkna.model.ImagesSaver;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -15,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import static org.fbb.balkna.model.Translator.R;
 import org.fbb.balkna.model.Model;
-import org.fbb.balkna.model.Statisticable;
+import org.fbb.balkna.model.Trainable;
 import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.merged.MergedExerciseWrapper;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
@@ -33,7 +31,7 @@ import org.w3c.dom.Element;
  *
  * @author jvanek
  */
-public class Training implements Substituable, Statisticable {
+public class Training implements Trainable {
 
     private final String id;
     private final String name;
@@ -167,6 +165,7 @@ public class Training implements Substituable, Statisticable {
         return getName();
     }
 
+    @Override
     public String[] getImages() {
         String[] r = new String[images.size()];
         for (int i = 0; i < images.size(); i++) {
@@ -180,6 +179,7 @@ public class Training implements Substituable, Statisticable {
         return Collections.unmodifiableList(exerciseOverrides);
     }
 
+    @Override
     public List<String> getExerciseImages() {
         List<String> r = new ArrayList<String>();
         List<ExerciseOverrides> l1 = getExerciseOverrides();
@@ -190,10 +190,12 @@ public class Training implements Substituable, Statisticable {
         return r;
     }
 
+    @Override
     public String getStory() {
         return getStory(false);
     }
 
+    @Override
     public String getStory(boolean html) {
         StringBuilder sb = new StringBuilder();
         if (html) {
@@ -275,7 +277,8 @@ public class Training implements Substituable, Statisticable {
 
     public static final String IMGS_SUBDIR = "images";
 
-    public File export(File root, ImagesSaver im) throws FileNotFoundException, IOException {
+    @Override
+    public File export(File root, ImagesSaver im) throws  IOException {
         String dir = "training-" + getId() + ".html";
         String index1 = "index.html";
         String index2 = "index.txt";
@@ -405,6 +408,16 @@ public class Training implements Substituable, Statisticable {
 
     public void started(String message) {
         addRecord(Record.create(RecordType.STARTED, message));
+    }
+
+    @Override
+    public Training getTraining() {
+        return this;
+    }
+
+    @Override
+    public int getTrainingPointer() {
+        return 0;
     }
 
 }
