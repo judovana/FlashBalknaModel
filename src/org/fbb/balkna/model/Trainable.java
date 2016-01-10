@@ -1,5 +1,6 @@
 package org.fbb.balkna.model;
 
+import org.fbb.balkna.model.primitives.Cycle;
 import org.fbb.balkna.model.primitives.Training;
 
 
@@ -10,7 +11,8 @@ import org.fbb.balkna.model.primitives.Training;
 public interface Trainable extends  Substituable, Statisticable, Exportable{
     
      public Training getTraining();
-     public int  getTrainingPointer();
+     public Cycle  getCycle();
+     
     
    
     

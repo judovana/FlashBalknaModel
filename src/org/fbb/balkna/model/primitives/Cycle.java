@@ -385,7 +385,6 @@ public class Cycle implements  Trainable {
      *
      * @return current training based on saved state
      */
-    @Override
     public int getTrainingPointer() {
         load();
         return trainingPointer;
@@ -463,5 +462,10 @@ public class Cycle implements  Trainable {
     public List<String> getExerciseImages() {
         //to much
         return new ArrayList<String>(0);
+    }
+
+    @Override
+    public Cycle getCycle() {
+        return this;
     }
 }

@@ -124,7 +124,7 @@ public abstract class BasicTime {
 
     public abstract void play();
 
-    public static void payEnd() {
+    public static void playEnd() {
         if (!Model.getModel().isLaud()) {
             return;
         }

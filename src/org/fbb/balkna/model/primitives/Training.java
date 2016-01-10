@@ -416,8 +416,8 @@ public class Training implements Trainable {
     }
 
     @Override
-    public int getTrainingPointer() {
-        return 0;
+    public Cycle getCycle() {
+        return null;
     }
 
 }

@@ -14,6 +14,8 @@ import java.util.List;
 import org.fbb.balkna.model.Model;
 import org.fbb.balkna.model.PluginFactoryProvider;
 import org.fbb.balkna.model.Statisticable;
+import org.fbb.balkna.model.primitives.history.Record;
+import org.fbb.balkna.model.primitives.history.RecordWithOrigin;
 
 /**
  *
@@ -25,12 +27,18 @@ public class IoUtils {
         if (!Model.getModel().isSaveStats()) {
             return;
         }
+        boolean savedMessage = Record.SHOW_MESSAGE;
+        boolean savedClass = RecordWithOrigin.SHOW_CLASS;
+        Record.SHOW_MESSAGE=true;
+        RecordWithOrigin.SHOW_CLASS=false;
         File f = i.getFile();
         BufferedWriter fr = null;
         try {
             fr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), "utf-8"));
             i.save(fr);
         } finally {
+            Record.SHOW_MESSAGE=savedMessage;
+            RecordWithOrigin.SHOW_CLASS=savedClass;
             if (fr != null) {
                 fr.close();
             }
