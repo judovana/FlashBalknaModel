@@ -18,6 +18,7 @@ import org.fbb.balkna.model.Translator;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
 import org.fbb.balkna.model.primitives.history.Record;
 import org.fbb.balkna.model.primitives.history.RecordType;
+import org.fbb.balkna.model.primitives.history.StatisticHelper;
 import org.fbb.balkna.model.utils.IoUtils;
 import org.fbb.balkna.model.utils.XmlUtils;
 import org.w3c.dom.Node;
@@ -28,7 +29,7 @@ import org.w3c.dom.Element;
  *
  * @author jvanek
  */
-public class Cycle implements  Trainable {
+public class Cycle implements Trainable {
 
     private final String id;
     private final String name;
@@ -53,7 +54,7 @@ public class Cycle implements  Trainable {
         this.localisedDescriptions = localisedDescriptions;
         this.images = images;
         this.trainings = trainings;
-        Model.substitute(images, this);
+        Model.substituteImages(images, this);
     }
 
     public static Cycle parse(final Node node) {
@@ -93,6 +94,13 @@ public class Cycle implements  Trainable {
     public String getId() {
         return id;
     }
+
+    @Override
+    public String getIdAsMcro() {
+        return "%{c-"+getId()+";"+getName()+"}";
+    }
+    
+    
 
     @Override
     public String getName() {
@@ -278,7 +286,7 @@ public class Cycle implements  Trainable {
 //        return new MergedExerciseWrapper(r);
 //    }
     @Override
-    public File export(File root, ImagesSaver im) throws  IOException {
+    public File export(File root, ImagesSaver im) throws IOException {
         String dir = "cycle-" + getId() + ".html";
         String index1 = "index.html";
         String index2 = "index.txt";
@@ -442,16 +450,21 @@ public class Cycle implements  Trainable {
     public void startCyclesTraining() {
         int i = getTrainingPointer();
         if (getTrainingPointer() == 1) {
-            addRecord(Record.create(RecordType.STARTED, "training: " + i + " - " + getTraining().getName()));
+            getStatsHelper().started("training: " + i + " - " + getTraining().getIdAsMcro());
         } else if (getTrainingPointer() == getTrainingOverrides().size()) {
-            addRecord(Record.create(RecordType.FINISHED, " at: " + i + " - " + getTraining().getName()));
+             getStatsHelper().finished(" at: " + i + " - " + getTraining().getIdAsMcro());
         } else {
-            addRecord(Record.create(RecordType.CONTINUED, " training: " + i + " - " + getTraining().getName()));
+            getStatsHelper().continued(" training: " + i + " - " + getTraining().getIdAsMcro());
         }
         incTrainingPointer();
         if (i == getTrainingPointer()) {//no change => i++ would cross max, but incTraining did not
             setTrainingPointer(1);
         }
+    }
+
+    @Override
+    public StatisticHelper getStatsHelper() {
+        return new StatisticHelper(this);
     }
 
     public void modified(String m) {

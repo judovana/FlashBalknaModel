@@ -18,7 +18,7 @@ import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.merged.MergedExerciseWrapper;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
 import org.fbb.balkna.model.primitives.history.Record;
-import org.fbb.balkna.model.primitives.history.RecordType;
+import org.fbb.balkna.model.primitives.history.StatisticHelper;
 import org.fbb.balkna.model.settings.Settings;
 import org.fbb.balkna.model.utils.IoUtils;
 import org.fbb.balkna.model.utils.TimeUtils;
@@ -73,7 +73,7 @@ public class Training implements Trainable {
         this.localisedDescriptions = localisedDescriptions;
         this.images = images;
         this.exerciseOverrides = exerciseOverrides;
-        Model.substitute(images, this);
+        Model.substituteImages(images, this);
     }
 
     public static Training parse(final Node node) {
@@ -133,6 +133,11 @@ public class Training implements Trainable {
     @Override
     public String getId() {
         return id;
+    }
+    
+    @Override
+    public String getIdAsMcro() {
+        return "%{t-"+getId()+";"+getName()+"}";
     }
 
     @Override
@@ -394,21 +399,11 @@ public class Training implements Trainable {
 
     }
 
-    public void finishedWithSkips(String message) {
-        addRecord(Record.create(RecordType.FINISHED_WITH_SKIPPS, message));
+    @Override
+    public StatisticHelper getStatsHelper() {
+        return new StatisticHelper(this);
     }
-
-    public void finished(String message) {
-        addRecord(Record.create(RecordType.FINISHED, message));
-    }
-
-    public void canceled(String message) {
-        addRecord(Record.create(RecordType.CANCELED, message));
-    }
-
-    public void started(String message) {
-        addRecord(Record.create(RecordType.STARTED, message));
-    }
+    
 
     @Override
     public Training getTraining() {

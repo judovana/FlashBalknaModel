@@ -13,6 +13,7 @@ import org.fbb.balkna.model.Statisticable;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
 import org.fbb.balkna.model.primitives.history.Record;
 import org.fbb.balkna.model.primitives.history.RecordType;
+import org.fbb.balkna.model.primitives.history.StatisticHelper;
 import org.fbb.balkna.model.utils.IoUtils;
 import org.fbb.balkna.model.utils.XmlUtils;
 import static org.fbb.balkna.model.utils.XmlUtils.getRealChilds;
@@ -55,7 +56,7 @@ public class Exercise implements Substituable, Statisticable {
         this.localisedNames = localisedNames;
         this.localisedDescriptions = localisedDescriptions;
         this.images = images;
-        Model.substitute(images, this);
+        Model.substituteImages(images, this);
     }
 
     public static Exercise parse(final Node node, SetDefaults defaults) {
@@ -119,6 +120,11 @@ public class Exercise implements Substituable, Statisticable {
     @Override
     public String getId() {
         return id;
+    }
+    
+    @Override
+    public String getIdAsMcro() {
+        return "%{e-"+getId()+";"+getName()+"}";
     }
 
     @Override
@@ -254,16 +260,10 @@ public class Exercise implements Substituable, Statisticable {
         lastRecord = r;
 
     }
-
-    public void finished(String message) {
-        addRecord(Record.create(RecordType.FINISHED, message));
-    }
-    public void canceled(String message) {
-        addRecord(Record.create(RecordType.CANCELED, message));
-    }
-
-    public void started(String message) {
-        addRecord(Record.create(RecordType.STARTED, message));
+    
+      @Override
+    public StatisticHelper getStatsHelper() {
+        return new StatisticHelper(this);
     }
 
 }

@@ -29,6 +29,11 @@ public class RecordWithOrigin implements Comparable<RecordWithOrigin> {
             public String getName() {
                 return "* *";
             }
+
+            @Override
+            public String getIdAsMcro() {
+                return null;
+            }
         }, Record.create(RecordType.NOW, null)) {
             @Override
             public String toString() {

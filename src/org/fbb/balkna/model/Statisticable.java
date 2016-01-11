@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import org.fbb.balkna.model.primitives.history.Record;
+import org.fbb.balkna.model.primitives.history.StatisticHelper;
 
 /**
  *
@@ -19,5 +20,6 @@ public interface Statisticable {
     public List<Record> getRecords();
     public File getFile();
     public void addRecord(Record r);
+    public StatisticHelper getStatsHelper();
     
 }

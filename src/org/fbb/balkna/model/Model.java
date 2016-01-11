@@ -37,7 +37,7 @@ import org.fbb.balkna.swing.locales.SwingTranslator;
 public class Model {
 
 
-    public static void substitute(List<String> images, Substituable a) {
+    public static void substituteImages(List<String> images, Substituable a) {
         for (int i = 0; i < images.size(); i++) {
             String get = images.get(i);
             String get2 = get.replace("%{id}", a.getId());

@@ -34,7 +34,7 @@ public class TimeUtils {
         return s;
     }
 
-    public  static String getRemainingTime(BasicTime c, MainTimer model) {
+    public static String getRemainingTime(BasicTime c, MainTimer model) {
         if (c != null) {
             return TimeUtils.secondsToHours(c.getCurrentValue() + model.getFutureTime()) + "/" + TimeUtils.secondsToHours(model.getTotalTime());
         } else {

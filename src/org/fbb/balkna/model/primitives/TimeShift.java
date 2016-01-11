@@ -101,10 +101,17 @@ public class TimeShift {
 
     @Override
     public String toString() {
-        return R("TrainingsShift") + ": " + training+", "
-                + R("PausesShift") + ": " + pause+", "
-                + R("IterationsShift") + ": " + iterations+", "
+        return R("TrainingsShift") + ": " + training + ", "
+                + R("PausesShift") + ": " + pause + ", "
+                + R("IterationsShift") + ": " + iterations + ", "
                 + R("RestsShift") + ": " + rest;
+    }
+
+    public String statInfo() {
+        return "T:" + training + ","
+                + "P:" + pause + ","
+                + "I:" + iterations + ","
+                + "R:" + rest;
     }
 
 }

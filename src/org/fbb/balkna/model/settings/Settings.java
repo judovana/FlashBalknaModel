@@ -372,6 +372,10 @@ public static Settings getSettings() {
         singleExerciseOverride.setValue(i);
     }
     
+    public String getSingleExerciseOverrideInfo() {
+        return singleExerciseOverride.valueAsString();
+    }
+    
     public boolean isPlayLongTermSounds() {
         return playLongTermSounds.getValue();
     }

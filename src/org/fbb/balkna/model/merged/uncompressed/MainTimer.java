@@ -21,12 +21,14 @@ public class MainTimer implements Timeable {
     private Runnable exerciseShiftedListener;
     private Runnable oneTenthOfSecondListener;
     private Runnable secondListener;
+    private int skipps;
 
     private int tenthOfSecond;
 
     private final Timer timer;
 
     public MainTimer(List<BasicTime> src) {
+        this.skipps = 0;
         this.src = Collections.unmodifiableList(src);
         this.index = 0;
         initTenth();
@@ -45,19 +47,37 @@ public class MainTimer implements Timeable {
         return index;
     }
 
-    public void skipForward() {
+    private void skipForward() {
+        skipForward(false);
+    }
+
+    public void skipForward(boolean forced) {
         if (index < src.size() - 1) {
             getCurrent().resetTime();
             initTenth();
             index++;
+            if (forced) {
+                if (!(getCurrent() instanceof PausaTime)) {
+                    skipps++;
+                }
+            }
             doExerciseShifted();
         }
     }
 
-    public void jumpBack() {
+    private void jumpBack() {
+        jumpBack(false);
+    }
+
+    public void jumpBack(boolean forced) {
         if (index > 0) {
             getCurrent().resetTime();
             index--;
+            if (forced) {
+                if (!(getCurrent() instanceof PausaTime)) {
+                    skipps--;
+                }
+            }
             doExerciseShifted();
         }
     }
@@ -307,4 +327,13 @@ public class MainTimer implements Timeable {
         }
         return train;
     }
+
+    public int getSkipps() {
+        return skipps;
+    }
+
+    public boolean wasSkipped() {
+        return skipps != 0;
+    }
+
 }
