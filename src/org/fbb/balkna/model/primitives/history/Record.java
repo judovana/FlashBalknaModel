@@ -2,6 +2,10 @@ package org.fbb.balkna.model.primitives.history;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.fbb.balkna.model.Substituable;
+import org.fbb.balkna.model.primitives.Cycles;
+import org.fbb.balkna.model.primitives.Exercises;
+import org.fbb.balkna.model.primitives.Trainings;
 
 /**
  *
@@ -14,8 +18,8 @@ public class Record implements Comparable<Record> {
     final RecordType what;
     final long when;
     final String message;
-    
-    public static boolean SHOW_MESSAGE=false;
+
+    public static boolean SHOW_MESSAGE = false;
 
     private Record(long when, RecordType what, String message) {
         this.what = what;
@@ -26,7 +30,7 @@ public class Record implements Comparable<Record> {
     @Override
     public String toString() {
         String s = when + " " + what;
-        if (SHOW_MESSAGE && message != null){
+        if (SHOW_MESSAGE && message != null) {
             s = s + " " + message;
         }
         return s;
@@ -34,8 +38,8 @@ public class Record implements Comparable<Record> {
 
     public String toNiceString() {
         String s = format(when) + " " + what.toNiceString();
-        if (SHOW_MESSAGE && message != null){
-            s = s + " - " + message;
+        if (SHOW_MESSAGE && message != null) {
+            s = s + " - " + processIDs(message);
         }
         return s;
     }
@@ -49,7 +53,7 @@ public class Record implements Comparable<Record> {
         s = s.trim();
         String[] ss = s.split("\\s+");
         int i = s.indexOf(ss[1]);
-        String message = s.substring(i+ss[1].length()).trim();
+        String message = s.substring(i + ss[1].length()).trim();
         return new Record(Long.valueOf(ss[0]), RecordType.valueOf(ss[1]), message);
     }
 
@@ -90,6 +94,37 @@ public class Record implements Comparable<Record> {
         hash = 37 * hash + (this.what != null ? this.what.hashCode() : 0);
         hash = 37 * hash + (int) (this.when ^ (this.when >>> 32));
         return hash;
+    }
+
+    private String processIDs(String message) {
+        String orogonal = message;
+        try {
+            while (message.contains("%{")) {
+                int start = message.indexOf("%{");
+                int end = message.indexOf("}");
+                String macroBody = message.substring(start + 2, end);
+                String[] macroParts = macroBody.split(";");
+                String[] keys = macroParts[0].split("-");
+                String substitued;
+                Substituable found = null;
+                if (keys[0].equals("c")) {
+                    found = Cycles.getInstance().getCycleById(keys[1]);
+                } else if (keys[0].equals("t")) {
+                    found = Trainings.getInstance().getTrainingById(keys[1]);
+                } else if (keys[0].equals("e")) {
+                    found = Exercises.getInstance().getExerciseById(keys[1]);
+                };
+                if (found != null) {
+                    substitued = found.getName();
+                } else {
+                    substitued = macroParts[1];
+                }
+                message = message.substring(0, start) + substitued + message.substring(end + 1);
+            }
+            return message;
+        } catch (Exception ex) {
+            return orogonal + "(" + ex.toString() + ")";
+        }
     }
 
 }
