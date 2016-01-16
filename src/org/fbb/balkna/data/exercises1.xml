@@ -5,7 +5,7 @@
             <id>internalWarmUp</id>
             <names>
                 <name>Warm up</name>
-                <name locale="cs">Nástup</name>
+                <name locale="cs">Zahřátí</name> <!-- yup, lets keep it on end of alphabet -->
             </names>
             <descriptions>
                 <description>Warm up to board!</description>
