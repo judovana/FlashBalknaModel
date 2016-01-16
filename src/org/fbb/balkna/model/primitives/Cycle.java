@@ -148,11 +148,11 @@ public class Cycle implements Trainable {
 
     @Override
     public Training getTraining() {
-        return getTraining(getTrainingPointer() - 1);
+        return getTraining(getTrainingPointer());
     }
 
     public Training getTraining(int which) {
-        return trainings.get(which).getTraining();
+        return trainings.get(which-1).getTraining();
     }
 
 //    public List<String> getExerciseImages() {
