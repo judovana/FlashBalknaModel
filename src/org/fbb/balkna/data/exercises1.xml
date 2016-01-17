@@ -22,7 +22,7 @@
     <exercises-set>
         <set-defaults>
             <time>10</time> <!--seconds -->
-            <pause>15</pause> <!--seconds -->
+            <pause>10</pause> <!--seconds -->
             <iterations>10</iterations>
             <rest>60</rest> <!-- rest (default) after whole exercise-->
         </set-defaults>
@@ -41,7 +41,7 @@
             </images>
             <defaults>
                 <time>10</time> <!--seconds -->
-                <pause>15</pause> <!--seconds -->
+                <pause>10</pause> <!--seconds -->
                 <iterations>10</iterations>
                 <rest>60</rest> <!-- rest (default) after whole exercise-->
             </defaults>
@@ -297,7 +297,7 @@
     
     <exercises-set> 
         <set-defaults>
-            <time>15</time> <!--seconds -->
+            <time>10</time> <!--seconds -->
             <pause>10</pause> <!--seconds -->
             <iterations>10</iterations>
             <rest>60</rest> <!-- rest (default) after whole exercise-->

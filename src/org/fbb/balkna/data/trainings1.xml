@@ -21,43 +21,50 @@
         </images>
         -->
         <exercises>
-            <exercise>
-                <id>a01</id>
+            <exercises-set>
                 <overrides>
-                    <!--any field from exercise can be overridenhere-->
-                    <!--<time>15</time>
+                    <time>10</time>
                     <pause>15</pause>
-                    <iterations>3</iterations>
-                    <rest>45</rest>-->
+                    <iterations>10</iterations>
                 </overrides>
-            </exercise>    
-            <exercise>
-                <id>a02</id>
-            </exercise>
-            <exercise>
-                <id>a03</id>
-            </exercise>
-            <exercise>
-                <id>a04</id>
-            </exercise>
-            <exercise>
-                <id>a05</id>
-            </exercise>
-            <exercise>
-                <id>a06</id>
-            </exercise>
-            <exercise>
-                <id>a07</id>
-            </exercise>
-            <exercise>
-                <id>a08</id>
-            </exercise>
-            <exercise>
-                <id>a09</id>
-            </exercise>
-            <exercise>
-                <id>a10</id>
-            </exercise>
+                <exercise>
+                    <id>a01</id>
+                    <overrides>
+                        <!--any field from exercise can be overridenhere-->
+                        <!--<time>15</time>
+                        <pause>15</pause>
+                        <iterations>3</iterations>
+                        <rest>45</rest>-->
+                    </overrides>
+                </exercise>    
+                <exercise>
+                    <id>a02</id>
+                </exercise>
+                <exercise>
+                    <id>a03</id>
+                </exercise>
+                <exercise>
+                    <id>a04</id>
+                </exercise>
+                <exercise>
+                    <id>a05</id>
+                </exercise>
+                <exercise>
+                    <id>a06</id>
+                </exercise>
+                <exercise>
+                    <id>a07</id>
+                </exercise>
+                <exercise>
+                    <id>a08</id>
+                </exercise>
+                <exercise>
+                    <id>a09</id>
+                </exercise>
+                <exercise>
+                    <id>a10</id>
+                </exercise>
+            </exercises-set>
         </exercises>
     </training>
     
@@ -71,49 +78,50 @@
             <description>not yet</description>
             <description locale="cs">nedodáno</description>            
         </descriptions>-->
-<!--        <images>
+        <!--        <images>
             <image>%{id}.jpg</image>
         </images>-->
         <exercises>
-            <exercise>
-                <id>a01</id>
+            <exercises-set>
                 <overrides>
+                    <time>10</time>
                     <pause>10</pause>
+                    <iterations>10</iterations>
                 </overrides>
-            </exercise>    
-            <exercise>
-                <id>a06</id>
-                <overrides>
-                    <pause>10</pause>
-                </overrides>
-            </exercise>
-            <exercise>
-                <id>b03</id>
-            </exercise>
-            <exercise>
-                <id>b04</id>
-            </exercise>
-            <exercise>
-                <id>b05</id>
-            </exercise>
-            <exercise>
-                <id>b06</id>
-            </exercise>
-            <exercise>
-                <id>b07</id>
-            </exercise>
-            <exercise>
-                <id>b08</id>
-            </exercise>
-            <exercise>
-                <id>b09</id>
-            </exercise>
-            <exercise>
-                <id>b10</id>
-            </exercise>
-            <exercise>
-                <id>b11</id>
-            </exercise>
+                <exercise>
+                    <id>a01</id>
+                </exercise>    
+                <exercise>
+                    <id>a06</id>
+                </exercise>
+                <exercise>
+                    <id>b03</id>
+                </exercise>
+                <exercise>
+                    <id>b04</id>
+                </exercise>
+                <exercise>
+                    <id>b05</id>
+                </exercise>
+                <exercise>
+                    <id>b06</id>
+                </exercise>
+                <exercise>
+                    <id>b07</id>
+                </exercise>
+                <exercise>
+                    <id>b08</id>
+                </exercise>
+                <exercise>
+                    <id>b09</id>
+                </exercise>
+                <exercise>
+                    <id>b10</id>
+                </exercise>
+                <exercise>
+                    <id>b11</id>
+                </exercise>
+            </exercises-set>
         </exercises>
     </training>    
     
@@ -124,55 +132,50 @@
             <name>FBB training hard</name>
             <name locale="cs">FBB trénink těžký</name>
         </names>
-<!--        <images>
+        <!--        <images>
             <image>%{id}.jpg</image>
         </images>-->
         <exercises>
-            <exercise>
-                <id>c01</id>
-            </exercise>    
-            <exercise>
-                <id>b03</id>
+            <exercises-set>
                 <overrides>
                     <time>15</time>
+                    <pause>10</pause>
+                    <iterations>10</iterations>
                 </overrides>
-            </exercise>
-            <exercise>
-                <id>b07</id>
-                <overrides>
-                    <time>15</time>
-                </overrides>
-            </exercise>
-            <exercise>
-                <id>b08</id>
-                <overrides>
-                    <time>15</time>
-                </overrides>
-            </exercise>
-            <exercise>
-                <id>c05</id>
-            </exercise>
-            <exercise>
-                <id>c06</id>
-            </exercise>
-            <exercise>
-                <id>c07</id>
-            </exercise>
-            <exercise>
-                <id>b08</id>
-                <overrides>
-                    <time>15</time>
-                </overrides>
-            </exercise>
-            <exercise>
-                <id>c09</id>
-            </exercise>
-            <exercise>
-                <id>c10</id>
-            </exercise>
-            <exercise>
-                <id>c11</id>
-            </exercise>
+                <exercise>
+                    <id>c01</id>
+                </exercise>    
+                <exercise>
+                    <id>b03</id>
+                </exercise>
+                <exercise>
+                    <id>b07</id>
+                </exercise>
+                <exercise>
+                    <id>b08</id>
+                </exercise>
+                <exercise>
+                    <id>c05</id>
+                </exercise>
+                <exercise>
+                    <id>c06</id>
+                </exercise>
+                <exercise>
+                    <id>c07</id>
+                </exercise>
+                <exercise>
+                    <id>b08</id>
+                </exercise>
+                <exercise>
+                    <id>c09</id>
+                </exercise>
+                <exercise>
+                    <id>c10</id>
+                </exercise>
+                <exercise>
+                    <id>c11</id>
+                </exercise>
+            </exercises-set>
         </exercises>
     </training>    
     

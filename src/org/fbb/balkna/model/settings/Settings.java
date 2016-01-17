@@ -39,10 +39,11 @@ public class Settings {
     private final BoolSettingsRecord invertScreenCompress = new BoolSettingsRecord(false, "invertScreenCompress");
     private final BoolSettingsRecord allowScreenChange = new BoolSettingsRecord(true, "allowScreenChange");
     private final BoolSettingsRecord playLongTermSounds = new BoolSettingsRecord(true, "playLongTermSounds");
+    private final BoolSettingsRecord androidAdvanced = new BoolSettingsRecord(false, "androidAdvanced");
     private final IntSettingsRecord imagesOnTimerSpeed = new IntSettingsRecord(2, "imagesOnTimerSpeed");
     private final StringSettingsRecord forcedLanguage = new StringSettingsRecord(null, "forcedLanguage");
     private final StringSettingsRecord forcedSoundFont = new StringSettingsRecord(Packages.DEFAULT_SOUND_PACK, "forcedSoundFont");
-    private final StringSettingsRecord singleExerciseOverride = new StringSettingsRecord("10 10 10 RR", "singleExerciseOverride");
+    private final StringSettingsRecord singleExerciseOverride = new StringSettingsRecord("TT PP II RR", "singleExerciseOverride");
 
     private final IntSettingsRecord trainingDelimiterSize = new IntSettingsRecord(15, "trainingDelimiterSize");
     private final IntSettingsRecord mainTimerSize = new IntSettingsRecord(0, "mainTimerSize");
@@ -67,7 +68,7 @@ public class Settings {
         laud, allowSkipping, pauseOnChange, pauseOnExercise, ratioForced, invertScreenCompress,
         allowScreenChange, imagesOnTimerSpeed, forcedLanguage, forcedSoundFont,
         trainingDelimiterSize, mainTimerSize, trainingDelimiterColor, selectedItemColor, mainTimerColor,
-        mainTimerPositionV, mainTimerPositionH, singleExerciseOverride, playLongTermSounds
+        mainTimerPositionV, mainTimerPositionH, singleExerciseOverride, playLongTermSounds, androidAdvanced
     };
 
     
@@ -384,4 +385,15 @@ public static Settings getSettings() {
     public void setPlayLongTermSounds(boolean ratioForced) {
         this.playLongTermSounds.setValue(ratioForced);
     }
+    
+    public boolean isAndroidAdvanced() {
+        return androidAdvanced.getValue();
+    }
+
+    
+    public void setAndroidAdvanced(boolean ad) {
+        this.androidAdvanced.setValue(ad);
+    }
+    
+    
 }
