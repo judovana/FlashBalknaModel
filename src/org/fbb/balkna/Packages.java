@@ -21,7 +21,7 @@ public class Packages {
     public static final String IMAGES_EXE = IMAGES + ".exercises";
     public static final String IMAGES_TRA = IMAGES + ".trainings";
     public static final String SOUND_PACK = DATA + ".soundpacks";
-    private static final String[] INTERNAL_SOUND_PACKS = {"cs", "cs_female", "cs_male", "en", "en_female", "en_male"};
+    private static final String[] INTERNAL_SOUND_PACKS = {"cs", "cs_female", "cs_male", "en", "en_female", "en_male", "piip-beep"};
     public static final String[] LANGUAGES = {" ", "cs", "en"};
     public static final String DEFAULT_SOUND_PACK = INTERNAL_SOUND_PACKS[0];
 

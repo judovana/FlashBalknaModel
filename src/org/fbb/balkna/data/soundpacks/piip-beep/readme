@@ -1,0 +1,23 @@
+vysoka hlasita - VH
+divna ticha - DT
+
+1.wav   				VH
+2.wav					DT DT
+3.wav   				VH VH VH
+change.wav				?
+endChange.wav			VH VVVVHHHHHH VVVVVHHHHHHH  DT DDDDTTTTTT
+endPause.wav			?
+endRun.wav				VH VVVVHHHHHH
+halfPause.wav			DT VH
+halfRun.wav				VH DT
+halfSerie.wav			DT DDDDTTT
+halfTraining.wav		DDDDTTT DDDDTTT
+lastExercise.wav		dddddddhhhhhhhhhhh dddddddhhhhhhhhhhh
+lastSerie.wav			dddddddhhhhhhhhhhh
+start.wav				VVVVVHHHHH
+threeQatsPause.wav  	DT DT VH VH
+threeQatsSerie.wav		DT DT DDDDTTT
+threeQatsTraining.wav	DDDDTTT DDDDTTT DDDDTTT
+threeQats.wav			VH DT VH DT
+trainingEnd.wav			VH DH dddddddhhhhhhhhhhh
+
