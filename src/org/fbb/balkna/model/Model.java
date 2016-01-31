@@ -412,8 +412,13 @@ public class Model {
     public Map<Date, DayStatst> getDayData(boolean ex, boolean tr, boolean cy) {
         return getDayData(1, ex, tr, cy, hour);
     }
+    
+    public Map<Date, DayStatst> getHourData(boolean ex, boolean tr, boolean cy) {
+        return getDayData(1, ex, tr, cy, minut);
+    }
 
-    private static final long hour = 60 * 60 * 1000;
+    private static final long minut = 60 * 1000;
+    private static final long hour = 60 * minut;
     private static final long day = hour * 24;
     private static final long week = 7 * day;
     private static final long month = 4 * week;
@@ -466,6 +471,11 @@ public class Model {
             if (step == hour) {
                 cl2.set(Calendar.DAY_OF_YEAR, cl.get(Calendar.DAY_OF_YEAR));
                 cl2.set(Calendar.HOUR_OF_DAY, cl.get(Calendar.HOUR_OF_DAY));
+            }
+            if (step == minut) {
+                cl2.set(Calendar.DAY_OF_YEAR, cl.get(Calendar.DAY_OF_YEAR));
+                cl2.set(Calendar.HOUR_OF_DAY, cl.get(Calendar.HOUR_OF_DAY));
+                cl2.set(Calendar.MINUTE, cl.get(Calendar.MINUTE));
             }
             Date day = cl2.getTime();
             DayStatst get = result.get(day);
