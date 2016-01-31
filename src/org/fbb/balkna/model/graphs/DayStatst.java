@@ -173,7 +173,7 @@ public class DayStatst implements Comparable<DayStatst> {
     }
 
     public static final SimpleDateFormat sdfMore = new SimpleDateFormat("d.M");
-    public static final SimpleDateFormat sdfDay = new SimpleDateFormat("HH.mm");
+    public static final SimpleDateFormat sdfDay = new SimpleDateFormat("HH:mm");
 
     public String getAdaptedDateTime() {
         return easyFormater.format(day);
