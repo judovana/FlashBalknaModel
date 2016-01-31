@@ -1,5 +1,6 @@
 package org.fbb.balkna.model;
 
+import org.fbb.balkna.model.graphs.DayStatst;
 import org.fbb.balkna.model.settings.Settings;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -11,9 +12,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BasicTime;
@@ -26,6 +32,7 @@ import org.fbb.balkna.model.primitives.Exercises;
 import org.fbb.balkna.model.primitives.TimeShift;
 import org.fbb.balkna.model.primitives.Training;
 import org.fbb.balkna.model.primitives.Trainings;
+import org.fbb.balkna.model.primitives.history.RecordType;
 import org.fbb.balkna.model.primitives.history.RecordWithOrigin;
 import org.fbb.balkna.model.utils.JavaPluginProvider;
 import org.fbb.balkna.swing.locales.SwingTranslator;
@@ -35,7 +42,6 @@ import org.fbb.balkna.swing.locales.SwingTranslator;
  * @author jvanek
  */
 public class Model {
-
 
     public static void substituteImages(List<String> images, Substituable a) {
         for (int i = 0; i < images.size(); i++) {
@@ -383,6 +389,109 @@ public class Model {
                 || (!ex && tr && !cy)
                 || (!ex && !tr && cy));
         return r;
+
+    }
+
+    public Map<Date, DayStatst> getMonthData(boolean ex, boolean tr, boolean cy) {
+        return getDayData(35, ex, tr, cy, day);
+    }
+
+    public Map<Date, DayStatst> getWeekData(boolean ex, boolean tr, boolean cy) {
+        return getDayData(10, ex, tr, cy, day);
+    }
+
+    public Map<Date, DayStatst> getYearData1(boolean ex, boolean tr, boolean cy) {
+        return getDayData(365, ex, tr, cy, month);
+    }
+
+    public Map<Date, DayStatst> getYearData2(boolean ex, boolean tr, boolean cy) {
+        return getDayData(365, ex, tr, cy, week);
+    }
+//dont fill! or just fake?
+
+    public Map<Date, DayStatst> getDayData(boolean ex, boolean tr, boolean cy) {
+        return getDayData(1, ex, tr, cy, hour);
+    }
+
+    private static final long hour = 60 * 60 * 1000;
+    private static final long day = hour * 24;
+    private static final long week = 7 * day;
+    private static final long month = 4 * week;
+
+    /**
+     *
+     * @param period - days
+     * @param ex
+     * @param tr
+     * @param cy
+     * @return
+     */
+    private Map<Date, DayStatst> getDayData(int period, boolean ex, boolean tr, boolean cy, long step) {
+        long p = period;
+        p = p * day;
+        return getDayData(p, ex, tr, cy, step);
+    }
+
+    /**
+     *
+     * @param period - in ms, and max 356day - see usage of DayOfYear
+     * @param ex
+     * @param tr
+     * @param cy
+     * @return
+     */
+    private Map<Date, DayStatst> getDayData(long period, boolean ex, boolean tr, boolean cy, long step) {
+        List<RecordWithOrigin> gathereds = gatherStatistics(ex, tr, cy);
+        Map<Date, DayStatst> result = new HashMap(gathereds.size() / 3);
+        Date now = new Date();
+        Calendar cl = new GregorianCalendar();
+        //int day = cl.get(Calendar.DAY_OF_YEAR);
+        for (RecordWithOrigin gathered : gathereds) {
+            if (now.getTime() - gathered.getRecord().getWhen() > period) {
+                break;
+            }
+            cl.setTime(new Date(gathered.getRecord().getWhen()));
+            Calendar cl2 = new GregorianCalendar();
+            cl2.setTime(new Date(0));
+            cl2.set(Calendar.YEAR, cl.get(Calendar.YEAR));
+            if (step == day) {
+                cl2.set(Calendar.DAY_OF_YEAR, cl.get(Calendar.DAY_OF_YEAR));
+            }
+            if (step == week) {
+                cl2.set(Calendar.WEEK_OF_YEAR, cl.get(Calendar.WEEK_OF_YEAR));
+            }
+            if (step == month) {
+                cl2.set(Calendar.MONTH, cl.get(Calendar.MONTH));
+            }
+            if (step == hour) {
+                cl2.set(Calendar.DAY_OF_YEAR, cl.get(Calendar.DAY_OF_YEAR));
+                cl2.set(Calendar.HOUR_OF_DAY, cl.get(Calendar.HOUR_OF_DAY));
+            }
+            Date day = cl2.getTime();
+            DayStatst get = result.get(day);
+            if (get == null) {
+                get = new DayStatst(day);
+                get.setStep(step);
+                if (step <= hour) {
+                    get.setEasyFormater(DayStatst.sdfDay);
+                } else {
+                    get.setEasyFormater(DayStatst.sdfMore);
+                }
+                result.put(day, get);
+            }
+            if (gathered.getRecord().getWhat() == RecordType.STARTED
+                    || gathered.getRecord().getWhat() == RecordType.CONTINUED) {
+                get.incStart(gathered.getOrigin().getClass());
+            } else if (gathered.getRecord().getWhat() == RecordType.FINISHED) {
+                get.incPass(gathered.getOrigin().getClass());
+            } else if (gathered.getRecord().getWhat() == RecordType.NOW) {
+            } else {
+                get.incFail(gathered.getOrigin().getClass());
+            }
+
+        }
+
+        return result;
 
     }
 
