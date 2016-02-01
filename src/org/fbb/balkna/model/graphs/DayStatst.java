@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author jvanek
  */
-public class DayStatst implements Comparable<DayStatst> {
+public class DayStatst implements Comparable<DayStatst>, Steppable {
 
     private final Date day;
     private final Map<Class, Integer> passes = new HashMap<Class, Integer>();
@@ -94,7 +94,7 @@ public class DayStatst implements Comparable<DayStatst> {
             return 1;
         } else {
             map.put(c, i + 1);
-            return i+1;
+            return i + 1;
         }
     }
 
@@ -160,20 +160,25 @@ public class DayStatst implements Comparable<DayStatst> {
         }
     }
 
+    @Override
     public long getStep() {
         return step;
     }
 
+    @Override
     public void setStep(long step) {
         this.step = step;
     }
 
+    @Override
     public void setEasyFormater(SimpleDateFormat easyFormater) {
         this.easyFormater = easyFormater;
     }
 
-    public static final SimpleDateFormat sdfMore = new SimpleDateFormat("d.M");
-    public static final SimpleDateFormat sdfDay = new SimpleDateFormat("HH:mm");
+    @Override
+    public SimpleDateFormat getEasyFormater() {
+        return easyFormater;
+    }
 
     public String getAdaptedDateTime() {
         return easyFormater.format(day);
