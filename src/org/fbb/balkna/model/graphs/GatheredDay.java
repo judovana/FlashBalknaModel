@@ -2,7 +2,6 @@ package org.fbb.balkna.model.graphs;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.fbb.balkna.model.primitives.history.RecordWithOrigin;
@@ -11,7 +10,7 @@ import org.fbb.balkna.model.primitives.history.RecordWithOrigin;
  *
  * @author jvanek
  */
-public class GatheredDay implements Comparable<GatheredDay>, Steppable {
+public class GatheredDay implements Steppable<GatheredDay> {
 
     private final Date day;
     private final List<RecordWithOrigin> sources = new ArrayList<RecordWithOrigin>();
@@ -68,7 +67,25 @@ public class GatheredDay implements Comparable<GatheredDay>, Steppable {
     }
 
     public List<RecordWithOrigin> getSources() {
-        return Collections.unmodifiableList(sources);
+        return sources;
+    }
+
+    @Override
+    public String toString() {
+        String s = day.toString();
+        if (getEasyFormater() != null) {
+            s = getAdaptedDateTime();
+        }
+        s += ":  " + clazzesToString(sources);
+        return s;
+    }
+
+    private String clazzesToString(List<RecordWithOrigin> sources) {
+        StringBuilder sb = new StringBuilder();
+        for (RecordWithOrigin source : sources) {
+            sb.append(source.toString()).append("; ");
+        }
+        return sb.toString();
     }
 
 }

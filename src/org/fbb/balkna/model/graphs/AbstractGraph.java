@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public abstract class AbstractGraph {
 
-    protected static int CWIDTH = 10;
+    protected static int CWIDTH = 40;
 
  
     
@@ -30,7 +30,27 @@ public abstract class AbstractGraph {
         }
         return max;
     }
+    
+    protected static int getMaxTimeInTimes(List<DayTimes> list) {
+        int max = 0;
+        for (DayTimes list1 : list) {
+            if (list1.getMaxTime()> max) {
+                max = list1.getMaxTime();//seconds
+            }
+        }
+        return max/60;//minutes!
+    }
 
+    
+    protected static int getMaxCyclesuseInTimes(List<DayTimes> list) {
+        int max = 0;
+        for (DayTimes list1 : list) {
+            if (list1.getCyclesOperationms()> max) {
+                max = list1.getCyclesOperationms();
+            }
+        }
+        return max;
+    }
     protected static List<Class> getClasses(List<DayStatst> list) {
         Set<Class> classes = new HashSet<Class>(4);
         int max = 0;
@@ -58,6 +78,18 @@ public abstract class AbstractGraph {
             return list;
         }
         dealWithNow(list);
+        return list;
+    }
+    
+    protected static List<DayTimes> getTimeDataAsList(Map<Date, DayTimes> data) {
+        Collection<DayTimes> vals = data.values();
+        List<DayTimes> list = new ArrayList<DayTimes>(vals);
+        Collections.sort(list);
+        if (list.isEmpty()) {
+            return list;
+        }
+        //dealWithNow(list);
+        //now should not be already dealed earlier
         return list;
     }
 

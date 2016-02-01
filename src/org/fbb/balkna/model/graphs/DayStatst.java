@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author jvanek
  */
-public class DayStatst implements Comparable<DayStatst>, Steppable {
+public class DayStatst implements Steppable<DayStatst> {
 
     private final Date day;
     private final Map<Class, Integer> passes = new HashMap<Class, Integer>();
@@ -182,6 +182,27 @@ public class DayStatst implements Comparable<DayStatst>, Steppable {
 
     public String getAdaptedDateTime() {
         return easyFormater.format(day);
+    }
+
+    @Override
+    public String toString() {
+        String s = day.toString();
+        if (getEasyFormater() != null) {
+            s = getAdaptedDateTime();
+        }
+        s += ";passes: " + clazzesToString(passes);
+        s += ";failes: " + clazzesToString(failes);
+        s += ";starts: " + clazzesToString(startss);
+        return s;
+    }
+
+    private String clazzesToString(Map<Class, Integer> m) {
+        Set<Map.Entry<Class, Integer>> ms = m.entrySet();
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<Class, Integer> m1 : ms) {
+            sb.append(m1.getKey().getSimpleName()).append(": ").append(getValue(m, m1.getKey()));
+        }
+        return sb.toString();
     }
 
 }

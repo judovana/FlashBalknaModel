@@ -6,8 +6,9 @@ import java.text.SimpleDateFormat;
 /**
  *
  * @author jvanek
+ * @param <T>
  */
-public interface Steppable {
+public interface Steppable<T> extends Comparable<T>{
 
     public static final SimpleDateFormat sdfMore = new SimpleDateFormat("d.M");
     public static final SimpleDateFormat sdfDay = new SimpleDateFormat("HH:mm");
