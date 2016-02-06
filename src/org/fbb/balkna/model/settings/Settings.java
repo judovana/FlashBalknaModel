@@ -35,6 +35,7 @@ public class Settings {
     private final BoolSettingsRecord allowSkipping = new BoolSettingsRecord(false, "allowSkipping");
     private final BoolSettingsRecord pauseOnChange = new BoolSettingsRecord(false, "pauseOnChange");
     private final BoolSettingsRecord pauseOnExercise = new BoolSettingsRecord(false, "pauseOnExercise");
+    private final BoolSettingsRecord inhibitSleepAndroid = new BoolSettingsRecord(true, "inhibitSleepAndroid");
     private final BoolSettingsRecord ratioForced = new BoolSettingsRecord(true, "ratioForced");
     private final BoolSettingsRecord invertScreenCompress = new BoolSettingsRecord(false, "invertScreenCompress");
     private final BoolSettingsRecord allowScreenChange = new BoolSettingsRecord(true, "allowScreenChange");
@@ -273,6 +274,14 @@ public class Settings {
 
 
 }
+    }
+
+    public void setSleepInhibited(boolean selected) {
+       inhibitSleepAndroid.setValue(selected);
+    }
+
+    public boolean isSleepInhibited() {
+        return inhibitSleepAndroid.getValue();
     }
 
     private static class SettingsHolder {
