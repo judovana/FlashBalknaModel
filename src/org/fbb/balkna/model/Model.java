@@ -298,7 +298,7 @@ public class Model {
 
     public String getExamplePluginUrl() {
         //return "file://";
-        return "https://github.com/judovana/FlashBalknaTestPlugin/releases/download/FlashBalknaTestPlugin-1.0/FlashBalknaTestPlugin_1.0.jar";
+        return "https://github.com/judovana/FlashBalknaTestPlugin/releases/download/FlashBalknaTestPlugin-2.0/FlashBalknaTestPlugin_2.0.jar";
     }
 
     public TimeShift getTimeShift() {
