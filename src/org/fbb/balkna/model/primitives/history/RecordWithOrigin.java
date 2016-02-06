@@ -62,7 +62,10 @@ public class RecordWithOrigin implements Comparable<RecordWithOrigin> {
 
     @Override
     public int compareTo(RecordWithOrigin t) {
-        return (int) (record.getWhen() - t.record.getWhen());
+        //overflows
+        //return (int) (record.getWhen() - t.record.getWhen());
+         return this.record.getWhen()<t.record.getWhen()?-1:
+               this.record.getWhen()>t.record.getWhen()?1:0;
     }
 
     @Override
