@@ -97,10 +97,8 @@ public class Cycle implements Trainable {
 
     @Override
     public String getIdAsMcro() {
-        return "%{c-"+getId()+";"+getName()+"}";
+        return "%{c-" + getId() + ";" + getName() + "}";
     }
-    
-    
 
     @Override
     public String getName() {
@@ -152,7 +150,7 @@ public class Cycle implements Trainable {
     }
 
     public Training getTraining(int which) {
-        return trainings.get(which-1).getTraining();
+        return trainings.get(which - 1).getTraining();
     }
 
 //    public List<String> getExerciseImages() {
@@ -398,6 +396,15 @@ public class Cycle implements Trainable {
         return trainingPointer;
     }
 
+    public String getTrainingPointerToString() {
+        load();
+        int tp = trainingPointer - 1;
+        if (tp <= 0 || tp >= trainings.size()) {
+            return Translator.R("last");
+        }
+        return tp + "/"+trainings.size();
+    }
+
     public void incTrainingPointer() {
         int i = getTrainingPointer();
         i++;
@@ -452,7 +459,7 @@ public class Cycle implements Trainable {
         if (getTrainingPointer() == 1) {
             getStatsHelper().started("training: " + i + " - " + getTraining().getIdAsMcro());
         } else if (getTrainingPointer() == getTrainingOverrides().size()) {
-             getStatsHelper().finished(" at: " + i + " - " + getTraining().getIdAsMcro());
+            getStatsHelper().finished(" at: " + i + " - " + getTraining().getIdAsMcro());
         } else {
             getStatsHelper().continued(" training: " + i + " - " + getTraining().getIdAsMcro());
         }
