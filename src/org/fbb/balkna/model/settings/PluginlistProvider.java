@@ -12,7 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import org.fbb.balkna.model.Translator;
+import org.fbb.balkna.swing.locales.SwingTranslator;
 
 /**
  *
@@ -47,11 +47,11 @@ public class PluginlistProvider {
         public String getResolution() {
             switch (this) {
                 case STABLE:
-                    return Translator.R("PPstateSable");
+                    return SwingTranslator.R("PPstateSable");
                 case TESTING:
-                    return Translator.R("PPstateTesting");
+                    return SwingTranslator.R("PPstateTesting");
                 case UNKNOWN:
-                    return Translator.R("PPstateUnknow");
+                    return SwingTranslator.R("PPstateUnknow");
             }
             return "Unknown Error explaining state";
         }
@@ -158,13 +158,13 @@ public class PluginlistProvider {
         public String getResolution() {
             switch (this) {
                 case NETWORK:
-                    return Translator.R("PPnetwork");
+                    return SwingTranslator.R("PPnetwork");
                 case CACHE:
-                    return Translator.R("PPcache");
+                    return SwingTranslator.R("PPcache");
                 case LOCAL:
-                    return Translator.R("PPlocal");
+                    return SwingTranslator.R("PPlocal");
                 case FATALTY:
-                    return Translator.R("PPerror");
+                    return SwingTranslator.R("PPerror");
             }
             return "Unknown Error explaining state";
         }
