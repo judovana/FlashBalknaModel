@@ -1,0 +1,5 @@
+#split on two or more semicolons
+#state(only stable/testing recognized);;home page;;latest download bits;;description
+stable;;https://github.com/judovana/FlashBalknaTestPlugin;;https://github.com/judovana/FlashBalknaTestPlugin/releases/download/FlashBalknaTestPlugin-2.0/FlashBalknaTestPlugin_2.0.jar;;Exemplar plugin with demonstrations of capabilities. in Addition contains  easy/advanced and advance/hard trainings and 6 long cycles based on those.
+testing;;https://github.com/judovana/FlashBalknaAixPlugin;;https://github.com/judovana/FlashBalknaAixPlugin/releases/download/FlashBalknaAixPlugin-0.3/FlashBalknaAixPlugin_0.3.jar;;Plugin containing Jirous' cycles for Aix PU board.
+testing;;https://github.com/judovana/FlashBalknaPluginMontana201605;;https://github.com/judovana/FlashBalknaPluginMontana201605/releases/download/FlashBalknaPluginMontana201605-0.1/FlashBalknaPluginMontana201605_0.1.jar;;30+ weeks long long-term-cycle based on article "powering fingers" from Montana 2016/05.
