@@ -138,7 +138,29 @@ public class PluginlistProvider {
 
     }
 
-    public static List<ParsedLine> obtain() {
+    public static enum LoadedPluginsState {
+
+        NETWORK, CACHE, LOCAL, FATALTY;
+    }
+
+    public static class LoadedPlugins {
+
+        private final List<ParsedLine> r;
+        private final LoadedPluginsState w;
+
+        public LoadedPlugins(List<ParsedLine> r, LoadedPluginsState w) {
+            this.r = r;
+            this.w = w;
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " - " + r.size() + " - " + w;
+        }
+
+    }
+
+    public static LoadedPlugins obtain() {
         List<ParsedLine> r = null;
         //network
         try {
@@ -152,7 +174,7 @@ public class PluginlistProvider {
                     ex.printStackTrace();
                 }
                 System.out.println("Loaded remote file. " + getExURL());
-                return r;
+                return new LoadedPlugins(r, LoadedPluginsState.NETWORK);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -162,7 +184,7 @@ public class PluginlistProvider {
             r = readFromUrl(getCachedURL());
             if (r != null && !r.isEmpty()) {
                 System.out.println("Read from cache: " + getCacheFile());
-                return r;
+                return new LoadedPlugins(r, LoadedPluginsState.CACHE);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -172,17 +194,17 @@ public class PluginlistProvider {
             r = readFromUrl(getInURL());
             if (r != null && !r.isEmpty()) {
                 System.out.println("Read from app: " + getInURL());
-                return r;
+                return new LoadedPlugins(r, LoadedPluginsState.LOCAL);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         System.out.println("All ways failed");
-        return new ArrayList<PluginlistProvider.ParsedLine>(0);
+        return new LoadedPlugins(new ArrayList<PluginlistProvider.ParsedLine>(0), LoadedPluginsState.FATALTY);
     }
 
     public static void main(String... args) {
-        List<ParsedLine> r = obtain();
+        LoadedPlugins r = obtain();
         System.out.println("" + r);
     }
 
