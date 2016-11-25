@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import org.fbb.balkna.model.Translator;
 
 /**
  *
@@ -42,6 +43,18 @@ public class PluginlistProvider {
     public static enum PluginState {
 
         STABLE, TESTING, UNKNOWN;
+
+        public String getResolution() {
+            switch (this) {
+                case STABLE:
+                    return Translator.R("PPstateSable");
+                case TESTING:
+                    return Translator.R("PPstateTesting");
+                case UNKNOWN:
+                    return Translator.R("PPstateUnknow");
+            }
+            return "Unknown Error explaining state";
+        }
 
     }
 
@@ -141,6 +154,20 @@ public class PluginlistProvider {
     public static enum LoadedPluginsState {
 
         NETWORK, CACHE, LOCAL, FATALTY;
+
+        public String getResolution() {
+            switch (this) {
+                case NETWORK:
+                    return Translator.R("PPnetwork");
+                case CACHE:
+                    return Translator.R("PPcache");
+                case LOCAL:
+                    return Translator.R("PPlocal");
+                case FATALTY:
+                    return Translator.R("PPerror");
+            }
+            return "Unknown Error explaining state";
+        }
     }
 
     public static class LoadedPlugins {
@@ -151,6 +178,14 @@ public class PluginlistProvider {
         public LoadedPlugins(List<ParsedLine> r, LoadedPluginsState w) {
             this.r = r;
             this.w = w;
+        }
+
+        public List<ParsedLine> getResult() {
+            return r;
+        }
+
+        public LoadedPluginsState getSource() {
+            return w;
         }
 
         @Override
