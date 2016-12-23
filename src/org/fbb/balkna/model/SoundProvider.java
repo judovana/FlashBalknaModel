@@ -23,6 +23,7 @@ public class SoundProvider {
     private static final String threeQatsPause = "threeQatsPause";
     private static final String threeQuatsRun = "threeQats";
     private static final String endChange = "endChange";
+    private static final String endChangeSmall = "endChangeSmall";
     private static final String halfSerie = "halfSerie";
     private static final String halfTraining = "halfTraining";
     private static final String lastExercise = "lastExercise";
@@ -48,7 +49,7 @@ public class SoundProvider {
     private WavPlayer PSthreeQatsPause;
     private WavPlayer PSthreeQuatsRun;
     private WavPlayer PSendChange;
-
+    private WavPlayer PSendChangeSmall;
     private WavPlayer PShalfSerie;
     private WavPlayer PShalfTraining;
     private WavPlayer PSlastExercise;
@@ -75,6 +76,7 @@ public class SoundProvider {
         PSthreeQatsPause = provider.createPlayer(getUrl(soundPack, threeQatsPause));
         PSthreeQuatsRun = provider.createPlayer(getUrl(soundPack, threeQuatsRun));
         PSendChange = provider.createPlayer(getUrl(soundPack, endChange));
+        PSendChangeSmall = provider.createPlayer(getUrl(soundPack, endChangeSmall));
         PShalfSerie = provider.createPlayer(getUrl(soundPack, halfSerie));
         PShalfTraining = provider.createPlayer(getUrl(soundPack, halfTraining));
         PSlastExercise = provider.createPlayer(getUrl(soundPack, lastExercise));
@@ -172,7 +174,10 @@ public class SoundProvider {
     public WavPlayer getPSendChange() {
         return PSendChange;
     }
-
+    
+    public WavPlayer getPSendChangeSmall() {
+        return PSendChangeSmall;
+    }
     public void test(String name) {
         String soundPack = getPackage(name);
         WavPlayer test = provider.createPlayer(getUrl(soundPack, all[new Random().nextInt(all.length)]));
