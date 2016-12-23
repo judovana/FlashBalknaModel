@@ -10,12 +10,17 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import static org.fbb.balkna.model.Translator.R;
 import org.fbb.balkna.model.Model;
 import org.fbb.balkna.model.Trainable;
 import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.merged.MergedExerciseWrapper;
+import org.fbb.balkna.model.merged.uncompressed.timeUnits.BasicTime;
+import org.fbb.balkna.model.merged.uncompressed.timeUnits.PausaTime;
+import org.fbb.balkna.model.merged.uncompressed.timeUnits.SmallRestTime;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
 import org.fbb.balkna.model.primitives.history.Record;
 import org.fbb.balkna.model.primitives.history.StatisticHelper;
@@ -134,10 +139,10 @@ public class Training implements Trainable {
     public String getId() {
         return id;
     }
-    
+
     @Override
     public String getIdAsMcro() {
-        return "%{t-"+getId()+";"+getName()+"}";
+        return "%{t-" + getId() + ";" + getName() + "}";
     }
 
     @Override
@@ -261,9 +266,16 @@ public class Training implements Trainable {
         breakLine(html, sb);
         sb.append(R("TotalTimeResting", TimeUtils.secondsToHours(m.getRestTime())));
         breakLine(html, sb);
+        List<BasicTime> d = m.decompress();
+        Set<String> indi = new HashSet<String>();
+        for (BasicTime d1 : d) {
+            if (!(d1 instanceof PausaTime)) {
+                indi.add(d1.getOriginator().getOriginal().getId());
+            }
+        }
         sb.append(R("TotalExercises", m.getIterations()));
         breakLine(html, sb);
-        sb.append(R("TotalDifferentExercises", m.getSize()));
+        sb.append(R("TotalDifferentExercises", m.getSize() + "/" + indi.size()));
         breakLine(html, sb);
         sb.append("----");
         breakLine(html, sb);
@@ -283,7 +295,7 @@ public class Training implements Trainable {
     public static final String IMGS_SUBDIR = "images";
 
     @Override
-    public File export(File root, ImagesSaver im) throws  IOException {
+    public File export(File root, ImagesSaver im) throws IOException {
         String dir = "training-" + getId() + ".html";
         String index1 = "index.html";
         String index2 = "index.txt";
@@ -403,7 +415,6 @@ public class Training implements Trainable {
     public StatisticHelper getStatsHelper() {
         return new StatisticHelper(this);
     }
-    
 
     @Override
     public Training getTraining() {
