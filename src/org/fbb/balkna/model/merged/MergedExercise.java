@@ -11,6 +11,7 @@ import org.fbb.balkna.model.Translator;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BasicTime;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BigRestTime;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.PausaTime;
+import org.fbb.balkna.model.merged.uncompressed.timeUnits.SmallRestTime;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.TrainingTime;
 import org.fbb.balkna.model.primitives.Exercise;
 import org.fbb.balkna.model.primitives.ExerciseOverrides;
@@ -128,7 +129,7 @@ public class MergedExercise {
         return toString(false);
     }
 
-    public List<BasicTime> decompress() {
+    public List<BasicTime> decompress(BasicTime next) {
         List<BasicTime> r = new ArrayList<BasicTime>();
         if (iterations == 0) {
             return r;
@@ -138,7 +139,16 @@ public class MergedExercise {
             r.add(new PausaTime(getPause(), this));
         }
         r.add(new TrainingTime(getTime(), this));
-        r.add(new BigRestTime(getRest(), this));
+        if (next == null) {
+            r.add(new BigRestTime(getRest(), this));
+        } else {
+            //we know next exercise
+            if (next.getOriginator().getOriginal().getId().equals(this.getOriginal().getId())){
+                r.add(new SmallRestTime(getRest(), this));
+            }else{
+                r.add(new BigRestTime(getRest(), this));
+            }
+        }
         return r;
     }
 

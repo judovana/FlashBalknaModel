@@ -55,8 +55,8 @@ public class MergedExerciseWrapper {
         }
         return sb.toString();
     }
-    
-     private void breakLine(boolean html, StringBuilder sb) {
+
+    private void breakLine(boolean html, StringBuilder sb) {
         if (html) {
             sb.append("<br>");
         }
@@ -69,8 +69,17 @@ public class MergedExerciseWrapper {
 
     public List<BasicTime> decompress() {
         List<BasicTime> r = new ArrayList<BasicTime>();
-        for (MergedExercise src1 : src) {
-            r.addAll(src1.decompress());
+        for (int i = 0; i < src.size(); i++) {
+            MergedExercise src1 = src.get(i);
+            List<BasicTime> decompressed = src1.decompress(null);
+            if (i < src.size() - 1) {
+                MergedExercise src2 = src.get(i + 1);
+                List<BasicTime> decompressed2 = src2.decompress(null);
+                if (decompressed2.size() > 0) {
+                    decompressed = src1.decompress(decompressed2.get(0));
+                }
+            }
+            r.addAll(decompressed);
         }
         return r;
 
