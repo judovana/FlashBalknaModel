@@ -19,6 +19,7 @@ import org.fbb.balkna.model.Trainable;
 import org.fbb.balkna.model.merged.MergedExercise;
 import org.fbb.balkna.model.merged.MergedExerciseWrapper;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.BasicTime;
+import org.fbb.balkna.model.merged.uncompressed.timeUnits.BigRestTime;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.PausaTime;
 import org.fbb.balkna.model.merged.uncompressed.timeUnits.SmallRestTime;
 import org.fbb.balkna.model.primitives.history.NonRepeatedArrayList;
@@ -268,14 +269,24 @@ public class Training implements Trainable {
         breakLine(html, sb);
         List<BasicTime> d = m.decompress();
         Set<String> indi = new HashSet<String>();
+        int breaks = 0;
+        int bigBreaks = 0;
         for (BasicTime d1 : d) {
             if (!(d1 instanceof PausaTime)) {
                 indi.add(d1.getOriginator().getOriginal().getId());
+            } else {
+                if (d1 instanceof BigRestTime) {
+                    breaks++;
+                    if (!(d1 instanceof SmallRestTime)) {
+                        bigBreaks++;
+                    }
+
+                }
             }
         }
         sb.append(R("TotalExercises", m.getIterations()));
         breakLine(html, sb);
-        sb.append(R("TotalDifferentExercises", m.getSize() + "/" + indi.size()));
+        sb.append(R("TotalDifferentExercises", m.getSize() + "/" + breaks + "/" + bigBreaks + "/" + indi.size()));
         breakLine(html, sb);
         sb.append("----");
         breakLine(html, sb);
