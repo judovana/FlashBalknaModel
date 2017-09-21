@@ -1,10 +1,11 @@
+Add weight support
+	- based on default weight for exercise?
+		support units? handle percentage?
+
 custom (editor)
 	- single hang
 	- cvik
 	- kompelxni trenink
 	- cyklus
-
-zvuky jen pipani
-
 
 xml - plugin requires - url, requires for url + ex/train IDS (aby znova nestahova kdyz uz jou)
